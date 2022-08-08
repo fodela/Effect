@@ -10,7 +10,6 @@ const Layout = ({ children }) => {
 				alt="background-img"
 				className="object-cover w-full h-full absolute mix-blend-overlay text-center"
 			/>
-			<p className="text-blue-500">is this working?</p>
 			{children}
 		</div>
 	);
