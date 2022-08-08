@@ -5,7 +5,11 @@ function App() {
 	return (
 		<div>
 			<Layout className="">
-				<div className="flex flex-col p-5 justify-between">
+				<div
+					className="flex flex-col justify-start
+				p-5
+				h-screen"
+				>
 					<div className="header flex justify-between bg-green-500 ">
 						<div className="logo">Logo</div>
 
@@ -13,9 +17,9 @@ function App() {
 					</div>
 
 					<div className="grow main bg-blue-500">main</div>
-					<div className="task bg-yellow-500">task</div>
-					<div className="quote bg-green-300">quote</div>
-					<div className="footer bg-blue-300">footer</div>
+					<div className="region-main h-1/2 bg-yellow-500">task</div>
+					<div className="quote bg-green-300 grow">quote</div>
+					<div className="grow footer bg-blue-300">footer</div>
 				</div>
 			</Layout>
 		</div>
