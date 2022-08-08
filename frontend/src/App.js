@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "./components/Layout/Layout";
+import MainRegion from "./components/MainRegion/MainRegion";
 
 function App() {
 	return (
@@ -10,14 +11,18 @@ function App() {
 				p-5
 				h-screen"
 				>
-					<div className="header flex justify-between bg-green-500 ">
-						<div className="logo">Logo</div>
+					<div className="region-top flex justify-between  bg-green-300 place-items-center">
+						<div className="logo h-12 w-12">
+							<img src="logo.png" alt="" />
+						</div>
 
 						<div className="weather">Weather</div>
 					</div>
 
 					<div className="grow main bg-blue-500">main</div>
-					<div className="region-main h-1/2 bg-yellow-500">task</div>
+					<div className="region-main h-1/2 bg-yellow-500">
+						<MainRegion />
+					</div>
 					<div className="quote bg-green-300 grow">quote</div>
 					<div className="grow footer bg-blue-300">footer</div>
 				</div>
