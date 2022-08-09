@@ -11,7 +11,7 @@ function App() {
 				p-5
 				h-screen"
 				>
-					<div className="region-top flex justify-between  bg-green-300 place-items-center">
+					<div className="region-top flex justify-between  place-items-center">
 						<div className="logo h-12 w-12">
 							<img src="logo.png" alt="" />
 						</div>
@@ -19,12 +19,14 @@ function App() {
 						<div className="weather">Weather</div>
 					</div>
 
-					<div className="grow main bg-blue-500">main</div>
-					<div className="region-main h-1/2 bg-yellow-500">
+					<div className="grow main "></div>
+					<div className="region-main h-1/2 ">
 						<MainRegion />
 					</div>
-					<div className="quote bg-green-300 grow">quote</div>
-					<div className="grow footer bg-blue-300">footer</div>
+					<div className="quote  grow">
+						You can't compete with someone who is having fun
+					</div>
+					<div className="grow footer ">nice image from ...</div>
 				</div>
 			</Layout>
 		</div>

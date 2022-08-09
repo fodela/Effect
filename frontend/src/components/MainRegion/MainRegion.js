@@ -5,7 +5,7 @@ import Salutation from "./Salutation";
 const MainRegion = ({ children }) => {
 	return (
 		<div
-			className="mx-auto text-center
+			className="p-5 mx-auto text-center
         flex flex-col justify-center w-3/4"
 		>
 			<Clock />
