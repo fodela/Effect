@@ -1,4 +1,4 @@
-import Clock from "./Clock";
+import CountdownTimer from "./CountdownTimer";
 import MainTask from "./MainTask";
 import Salutation from "./Salutation";
 
@@ -8,7 +8,7 @@ const MainRegion = ({ children }) => {
 			className="p-5 mx-auto text-center
         flex flex-col justify-center w-3/4"
 		>
-			<Clock />
+			<CountdownTimer />
 			<Salutation />
 			<MainTask />
 		</div>
