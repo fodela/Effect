@@ -22,7 +22,7 @@ function App() {
 
 					<div className="grow main "></div>
 					<div className="region-main h-1/2 ">
-						<MainRegion />
+						<MainRegion className="bg-black" />
 					</div>
 					<div className="quote  grow">
 						You can't compete with someone who is having fun
