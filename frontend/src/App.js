@@ -27,7 +27,28 @@ function App() {
 					<div className=" grow quote text-center w-3/4 mx-auto">
 						You can't compete with someone who is having fun
 					</div>
-					<div className=" footer ">nice image from ...</div>
+					<div className=" footer flex justify-between relative">
+						<p>nice image from ...</p>
+						<button className="cursor-pointer">Todo</button>
+						<div
+							className="bg-black absolute bottom-0 right-0
+						flex flex-col p-3"
+						>
+							<div className="flex gap-1 pb-2">
+								<input type="checkbox" name="" id="" className="flex gap-1" />
+								<p>Go big or go home</p>
+							</div>
+							<div className="flex gap-1 pb-2">
+								<input type="checkbox" name="" id="" />
+								<p>Go big or go home</p>
+							</div>
+							<div className="flex gap-1 pb-2">
+								<input type="checkbox" name="" id="" />
+								<p>Go big or go home</p>
+							</div>
+							<button>Add + </button>
+						</div>
+					</div>
 				</div>
 			</Layout>
 		</div>
