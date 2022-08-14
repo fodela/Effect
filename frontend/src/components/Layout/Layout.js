@@ -1,12 +1,43 @@
+import { useState, useEffect } from "react";
+import { createApi } from "unsplash-js";
+
+const unsplashApi = createApi({
+	accessKey: "ssxRTObTWUTsTNRA4FCR6sUIeznLzrtbwT6JkUzWZLA",
+});
+
 const Layout = ({ children }) => {
+	const [imageData, setImageQueryResponse] = useState(null);
+
+	useEffect(() => {
+		unsplashApi.search
+			.getPhotos({
+				query: "mountain",
+				collections: "mountain",
+			})
+			.then((result) => {
+				setImageQueryResponse(result);
+			})
+			.catch((error) => {
+				console.log(`Something went wrong \n${error}`);
+			});
+	}, []);
+
+	let photo;
+
+	imageData == null
+		? console.log("loading...")
+		: imageData.errors
+		? console.log(imageData.errors[0])
+		: (photo =
+				imageData.response.results[Math.floor(Math.random() * 10)].urls.full);
+
 	return (
 		<div
 			className="h-screen relative
 		bg-[rgba(0,0,0,.3)]"
 		>
 			<img
-				src="
-				https://images.unsplash.com/photo-1434394354979-a235cd36269d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1151&q=80"
+				src={photo}
 				alt="background-img"
 				className="object-cover w-full h-full absolute mix-blend-overlay text-center"
 			/>
