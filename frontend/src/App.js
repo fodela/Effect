@@ -24,7 +24,7 @@ function App() {
 					<div className="region-main h-1/2 ">
 						<MainRegion className="bg-black" />
 					</div>
-					<div className="quote  grow">
+					<div className=" grow quote text-center w-3/4 mx-auto">
 						You can't compete with someone who is having fun
 					</div>
 					<div className="grow footer ">nice image from ...</div>
