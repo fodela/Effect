@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "./components/Layout/Layout";
 import MainRegion from "./components/MainRegion/MainRegion";
+import Weather from "./components/Weather";
 
 function App() {
 	return (
@@ -16,7 +17,7 @@ function App() {
 							<img src="logo.png" alt="" />
 						</div>
 
-						<div className="weather">Weather</div>
+						<Weather />
 					</div>
 
 					<div className="grow main "></div>
