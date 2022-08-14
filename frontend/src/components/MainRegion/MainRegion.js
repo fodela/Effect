@@ -6,7 +6,7 @@ const MainRegion = ({ children }) => {
 	return (
 		<div
 			className="p-5 mx-auto text-center
-        flex flex-col justify-between w-3/4 h-3/4 bg-black"
+        flex flex-col justify-between bg-black"
 		>
 			<CountdownTimer />
 			<Salutation />

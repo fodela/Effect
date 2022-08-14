@@ -27,7 +27,7 @@ function App() {
 					<div className=" grow quote text-center w-3/4 mx-auto">
 						You can't compete with someone who is having fun
 					</div>
-					<div className="grow footer ">nice image from ...</div>
+					<div className=" footer ">nice image from ...</div>
 				</div>
 			</Layout>
 		</div>

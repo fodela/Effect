@@ -1,8 +1,11 @@
 const MainTask = () => {
 	return (
-		<div className="flex text-xl gap-2">
+		<div className="flex text-xl gap-2  mx-auto">
 			<input type="checkbox" name="taskStatus" id="" />
-			<p className="">Post update on twitter</p>
+			<p className="text-left">
+				Post update on twitter Lorem ipsum dolor sit amet consectetur,
+				adipisicing elit.
+			</p>
 		</div>
 	);
 };
