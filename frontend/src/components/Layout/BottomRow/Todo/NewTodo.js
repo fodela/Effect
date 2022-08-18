@@ -1,3 +1,4 @@
+const addTask = (event) => console.log(event);
 const NewTodo = () => {
 	return (
 		<input
@@ -5,7 +6,8 @@ const NewTodo = () => {
 			name="newTodo"
 			id="newTodo"
 			placeholder="New Todo"
-			className="mx-auto m-5 pl-2 bg-black"
+			className="mx-auto m-5 pl-2 bg-black
+			onKeyPress={console.log('it works'))}"
 		/>
 	);
 };
