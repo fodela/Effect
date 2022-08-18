@@ -1,12 +1,17 @@
 import NewTodo from "./NewTodo";
 import TodoItem from "./TodoItem/TodoItem";
 
+let allTasks = [
+	"Finish todo component",
+	"Go and eat",
+	"Work on presentation slides",
+];
+
 const Todo = () => {
+	const tasks = allTasks.map((task) => <TodoItem task={task} />);
 	return (
-		<div className="bg-black absolute bottom-8 right-0 w-80 p-4">
-			<TodoItem task={"Finish todo component"} />
-			<TodoItem task={"Go and eat"} />
-			<TodoItem task={"Work on presentation slides"} />
+		<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4">
+			{tasks}
 			<NewTodo />
 		</div>
 	);
