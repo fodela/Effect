@@ -6,11 +6,11 @@ const TodoItem = (props) => {
 			id="taskDone"
 			checked
 			className="m-2"
+			onChange={console.log("done state changed")}
 		/>
 	) : (
 		<input type="checkbox" name="taskDone" id="taskDone" className="m-2" />
 	);
-	console.log("#######", props.done);
 	return (
 		<span className="flex items-start ">
 			{checkbox}

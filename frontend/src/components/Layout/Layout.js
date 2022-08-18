@@ -43,10 +43,6 @@ const Layout = (props) => {
 			className="h-screen relative
 		bg-[rgba(0,0,0,.3)]"
 		>
-			<img
-				alt="background-img"
-				className="object-cover w-full h-full absolute mix-blend-overlay text-center"
-			/>
 			{props.children}
 		</div>
 	);

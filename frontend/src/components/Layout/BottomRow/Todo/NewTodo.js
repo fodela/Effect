@@ -1,4 +1,3 @@
-const addTask = (event) => console.log(event);
 const NewTodo = () => {
 	return (
 		<input
