@@ -3,7 +3,7 @@ import NewTodo from "./NewTodo";
 import TodoItem from "./TodoItem/TodoItem";
 
 let allDefaultTasks = [
-	{ description: "Finish todo component" },
+	{ description: "Finish todo component", done: true },
 	{ description: "Go and eat" },
 	{ description: "Work on presentation slides" },
 ];
@@ -17,7 +17,13 @@ const Todo = () => {
 	let tasks;
 
 	tasks = allTasks.map((task) => {
-		return <TodoItem click={deleteTaskHandler} task={task.description} />;
+		return (
+			<TodoItem
+				click={deleteTaskHandler}
+				done={task.done}
+				task={task.description}
+			/>
+		);
 	});
 	return (
 		<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4">

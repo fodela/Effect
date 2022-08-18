@@ -6,7 +6,7 @@
 // 	accessKey: "ssxRTObTWUTsTNRA4FCR6sUIeznLzrtbwT6JkUzWZLA",
 // });
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
 	// const [imageData, setImageQueryResponse] = useState(null);
 
 	// function getWapaperDetails() {
@@ -47,7 +47,7 @@ const Layout = ({ children }) => {
 				alt="background-img"
 				className="object-cover w-full h-full absolute mix-blend-overlay text-center"
 			/>
-			{children}
+			{props.children}
 		</div>
 	);
 };
