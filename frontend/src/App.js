@@ -1,7 +1,7 @@
-import React from "react";
+// import React from "react";
 import BottomRow from "./components/Layout/BottomRow/BottomRow";
 import Layout from "./components/Layout/Layout";
-import MainRegion from "./components/MainRegion/MainRegion";
+import MainRegion from "./components/Layout/RegionCenter/MainRegion/MainRegion";
 // import Weather from "./components/Weather";
 
 function App() {

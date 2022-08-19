@@ -1,4 +1,4 @@
-import CountdownTimer from "./CountdownTimer";
+import CountdownTimer from "../../../../containers/CountdownTimer";
 import MainTask from "./MainTask";
 import Salutation from "./Salutation";
 

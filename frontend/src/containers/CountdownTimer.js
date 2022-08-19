@@ -16,7 +16,7 @@ class CountdownTimer extends Component {
 	};
 
 	stopTimerHandler = () => {
-		console.log("time stoped!");
+		console.log("time stopped!");
 		this.setState({ counterState: "Start" });
 	};
 	render() {
