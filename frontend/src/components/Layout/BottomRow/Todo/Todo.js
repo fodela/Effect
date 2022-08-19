@@ -36,7 +36,7 @@ const Todo = () => {
 				onClick={todoItemClicked} // onClick={deleteTaskHandler}
 				done={task.done}
 				task={task.description}
-				id={task.index}
+				id={allTasks.indexOf(task)}
 			/>
 		);
 	});
