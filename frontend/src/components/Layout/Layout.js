@@ -40,8 +40,8 @@ const Layout = (props) => {
 	return (
 		<div
 			className="h-screen relative
-		bg-[url('https://images.unsplash.com/photo-1564537499-9ed6029493f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80')] 
-		bg-[#00000083]"
+		bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80')] 
+		bg-[#0000003c] bg-cover  bg-blend-overlay"
 		>
 			{props.children}
 		</div>
