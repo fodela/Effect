@@ -14,7 +14,10 @@ const TodoItem = (props) => {
 		<span className="flex items-start ">
 			{checkbox}
 			<span className="task-description grow my-1">{props.task}</span>
-			<div className="last more  opacity-0 hover:opacity-100 hover:pointer text-xl items-center">
+			<div
+				className="last more  opacity-0 hover:opacity-100 hover:pointer text-xl items-center"
+				onClick={props.deleteTask}
+			>
 				...
 			</div>
 		</span>

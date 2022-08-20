@@ -1,51 +1,79 @@
-import { useEffect, useState } from "react";
+import { Component } from "react";
 import NewTodo from "./NewTodo";
 import TodoItem from "./TodoItem/TodoItem";
 
-let allDefaultTasks = [
-	{ description: "Finish todo component", done: true },
-	{ description: "Go and eat" },
-	{ description: "Work on presentation slides" },
-];
+// class Todo extends Component {
+// 	state(
+//
+// 		)
 
-const Todo = () => {
-	const [allTasks, setTasks] = useState(allDefaultTasks);
+// 	// addTodoHandler = (event) => (
+// 	// 	console.log("addTodoHandler")
+// 	// 	// if (event.keyCode === 13) {
+// 	// 	// 	allTasks.push({ description: event.target.value.trim() });
+// 	// 	// 	setTasks(allTasks);
+// 	// 	// }
+// 	// 	)
 
-	const addTodoHandler = (event) => {
-		if (event.keyCode === 13) {
-			console.log("fired");
-			allTasks.push({ description: event.target.value.trim() });
-			console.log(allTasks);
-			setTasks(allTasks);
-		}
+// 	// deleteTaskHandler = (taskIndex) => {
+// 	// 	allTasks.splice(taskIndex, 1);
+// 	// 	setTasks(allTasks);
+// 	// 	console.log(taskIndex, " deleted", "\n", allTasks);
+// 	// };
+// 	render() {
+
+// 	tasks = allTasks.map((task, index) => {
+// 		return (
+// 			<TodoItem
+// 				// deleteTask={() => deleteTaskHandler(index)}
+// 				done={task.done}
+// 				task={task.description}
+// 				id={index}
+// 			/>
+// 		);
+// 	});
+
+// 	r
+// }
+// }
+// export default Todo;
+
+class Todo extends Component {
+	state = {
+		allTasks: [
+			{ description: "Finish todo component", done: true },
+			{ description: "Go and eat" },
+			{ description: "Work on presentation slides" },
+		],
 	};
 
-	// const deleteTaskHandler = (taskIndex) => {
-	// 	setTasks(allTasks.splice);
-	// 	console.log("delete");
-	// };
-	let tasks;
+	deleteTaskHandler = (taskIndex) => {
+		const allTasks = [...this.state.allTasks];
+		allTasks.splice(taskIndex, 1);
+		this.setState({ allTasks: allTasks });
+		console.log(taskIndex, " deleted");
+	};
 
-	const todoItemClicked = () => console.log("this is it");
-	// const updateUi = (allTasks) => {
-	// 	return tasks;
-	// };
-	tasks = allTasks.map((task) => {
+	render() {
+		let tasks;
+
+		tasks = this.state.allTasks.map((task, index) => {
+			return (
+				<TodoItem
+					key={index}
+					done={task.done}
+					task={task.description}
+					deleteTask={() => this.deleteTaskHandler(index)}
+				/>
+			);
+		});
 		return (
-			<TodoItem
-				onClick={todoItemClicked} // onClick={deleteTaskHandler}
-				done={task.done}
-				task={task.description}
-				id={allTasks.indexOf(task)}
-			/>
+			<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4">
+				{tasks}
+				<NewTodo />
+			</div>
 		);
-	});
-	// useEffect(updateUi(), [allTasks]);
-	// return (
-	// 	<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4">
-	// 		{tasks}
-	// 		<NewTodo addTodo={addTodoHandler} />
-	// 	</div>
-	// );
-};
+	}
+}
+
 export default Todo;
