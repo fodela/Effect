@@ -47,6 +47,15 @@ class Todo extends Component {
 		],
 	};
 
+	addTaskHandler = (event) => {
+		if (event.keyCode === 13) {
+			const allTasks = [...this.state.allTasks];
+			allTasks.push({ description: event.target.value });
+			this.setState({ allTasks: allTasks });
+			console.log("task added");
+		}
+	};
+
 	deleteTaskHandler = (taskIndex) => {
 		const allTasks = [...this.state.allTasks];
 		allTasks.splice(taskIndex, 1);
@@ -70,7 +79,7 @@ class Todo extends Component {
 		return (
 			<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4">
 				{tasks}
-				<NewTodo />
+				<NewTodo addTask={this.addTaskHandler} />
 			</div>
 		);
 	}

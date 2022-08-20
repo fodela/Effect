@@ -8,7 +8,7 @@ const NewTodo = (props) => {
 			placeholder="New Todo"
 			className="mx-auto m-5 pl-2 bg-black
 			"
-			onKeyUp={props.addTodo}
+			onKeyUp={(event) => props.addTask(event)}
 		/>
 	);
 };
