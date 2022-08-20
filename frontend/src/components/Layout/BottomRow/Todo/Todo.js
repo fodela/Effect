@@ -77,8 +77,11 @@ class Todo extends Component {
 			);
 		});
 		return (
-			<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4">
-				{tasks}
+			<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4 ">
+				<div className="todo-header">Today</div>
+				<div className="task-container max-h-[calc(60vh)] overflow-y-scroll">
+					{tasks}
+				</div>
 				<NewTodo addTask={this.addTaskHandler} />
 			</div>
 		);
