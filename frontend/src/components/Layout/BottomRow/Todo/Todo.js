@@ -6,9 +6,16 @@ class Todo extends Component {
 	state = {
 		allTasks: [
 			{ description: "Go Big or go Home" },
-			{ description: "Finish todo component", done: true },
+			{ description: "Finish Pomodoro timer", done: true },
 			{ description: "Work on presentation slides" },
 		],
+	};
+
+	changeTodoStateHandler = (taskIndex) => {
+		const allTasks = [...this.state.allTasks];
+		allTasks[taskIndex].done = allTasks[taskIndex].done ? false : true;
+		this.setState({ allTasks: allTasks });
+		// console.log(allTasks[taskIndex]);
 	};
 
 	addTaskHandler = (event) => {
@@ -41,6 +48,7 @@ class Todo extends Component {
 					done={task.done}
 					task={task.description}
 					deleteTask={() => this.deleteTaskHandler(index)}
+					changeTodoState={() => this.changeTodoStateHandler(index)}
 				/>
 			);
 		});
