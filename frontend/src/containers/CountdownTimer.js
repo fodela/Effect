@@ -1,4 +1,5 @@
 import { Component } from "react";
+import CountDownTimerButton from "../components/Layout/RegionCenter/CountDonwTimerButton";
 import countDown from "../utils/countDown";
 // import getRemainingTime from "../getRemainingTime";
 
@@ -15,94 +16,59 @@ class CountdownTimer extends Component {
 	startTimer = () => {
 		this.timerInterval = setInterval(() => {
 			this.setState({ remainingTime: countDown() });
-			console.log(this.state.remainingTime);
 		}, 1000);
 	};
 
 	startTimerHandler = () => {
-		console.log("time started!");
 		this.setState({ counterState: "Started" });
 		this.startTimer();
 	};
 
 	pauseTimerHandler = () => {
-		console.log("time paused!");
 		this.setState({ counterState: "Paused" });
 		clearInterval(this.timerInterval);
 	};
 	stopTimerHandler = () => {
-		console.log("time stopped!");
-		this.setState({ counterState: "Start" });
+		this.setState({ counterState: "Stopped" });
 		clearInterval(this.timerInterval);
 		this.setState({ remainingTime: this.props.DefaultRemainingTime });
 	};
 	render() {
-		// let counterButton =
-		// 	this.state.counterState === "Start" ? (
-		// 		<button
-		// 			onClick={this.startTimerHandler}
-		// 			className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-		// 		>
-		// 			{this.state.counterState}
-		// 		</button>
-		// 	) : (
-		// 		<button
-		// 			onClick={this.startTimerHandler}
-		// 			className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-		// 		>
-		// 			Pause
-		// 		</button>
-		// 	);
 		let counterButton;
 
 		switch (this.state.counterState) {
 			case "Started":
 				counterButton = (
-					<button
-						onClick={this.pauseTimerHandler}
-						className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-					>
+					<CountDownTimerButton click={this.pauseTimerHandler}>
 						Pause
-					</button>
+					</CountDownTimerButton>
 				);
 				break;
 			case "Paused":
 				counterButton = (
 					<div className="flex gap-2 justify-center">
-						<button
-							onClick={this.startTimerHandler}
-							className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-						>
+						<CountDownTimerButton click={this.startTimerHandler}>
 							Continue
-						</button>
-						<button
-							onClick={this.stopTimerHandler}
-							className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-						>
+						</CountDownTimerButton>
+						<CountDownTimerButton click={this.stopTimerHandler}>
 							Stop
-						</button>
+						</CountDownTimerButton>
 					</div>
 				);
 
 				break;
 			case "Stopped":
 				counterButton = (
-					<button
-						onClick={this.startTimerHandler}
-						className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-					>
+					<CountDownTimerButton click={this.startTimerHandler}>
 						Start
-					</button>
+					</CountDownTimerButton>
 				);
 				break;
 			default:
 				counterButton = (
-					<button
-						onClick={this.startTimerHandler}
-						className="bg-[#444] px-2 rounded-lg mt-2 cursor-pointer"
-					>
+					<CountDownTimerButton click={this.startTimerHandler}>
 						Start
-					</button>
+					</CountDownTimerButton>
 				);
 		}
 
@@ -112,7 +78,7 @@ class CountdownTimer extends Component {
 					{this.state.remainingTime.minutes} :{" "}
 					{this.state.remainingTime.seconds}
 				</div>
-				<p>focus</p>
+				<p>Focus</p>
 				{counterButton}
 			</div>
 		);
