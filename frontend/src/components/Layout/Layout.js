@@ -6,59 +6,41 @@ const unsplashApi = createApi({
 
 let day = 1;
 
-const getAllWallpapers = () => {
-	let allWallpapers;
-
-	unsplashApi.search
-		.getPhotos({
-			query: "mountain",
-			collections: "mountain",
-			per_page: 30,
-		})
-		.then((result) => {
-			allWallpapers = result.response.results;
-			console.log("dfsjdfs", allWallpapers);
-		})
-		.catch((error) => {
-			console.log(`Something went wrong \n${error}`);
-		});
-	return allWallpapers;
-};
-
 const Layout = (props) => {
-	let allwallpapers = localStorage.getItem("allWallpapers");
+	let storedWallpapers = localStorage.getItem("allWallpapers");
 
-	const storeAllWallpapers = (getAllWallpapers) => {
-		const allWallpapersArray = getAllWallpapers();
-		console.log("AAAAAAA", allWallpapersArray);
-		localStorage.setItem("allWallpapers", allWallpapersArray);
-		console.log("stored", allWallpapersArray[day]);
-		return allWallpapersArray[day];
+	const getAllWallpapers = () => {
+		let allWallpapers;
+
+		unsplashApi.search
+			.getPhotos({
+				query: "mountain",
+				collections: "wallpaper",
+				per_page: 30,
+			})
+			.then((result) => {
+				allWallpapers = result.response.results;
+				console.log("dfsjdfs", allWallpapers);
+			})
+			.catch((error) => {
+				console.log(`Something went wrong \n${error}`);
+			});
+
+		// store wallpaper to localStorage
+		localStorage.setItem("allWallpapers", allWallpapers);
+		return allWallpapers;
 	};
-
-	const retrieveAllWallpapers = () => {
-		day++;
-		console.log("retrieved", localStorage.getItem("allWallpapers")[day]);
-		return localStorage.getItem("allWallpapers")[day];
-	};
-
-	const wallpaper =
-		typeof allwallpapers === Array
-			? retrieveAllWallpapers(getAllWallpapers)
-			: storeAllWallpapers();
-
-	console.log("3333333333", wallpaper);
-	getAllWallpapers();
-
-	return (
-		<div
-			className={`h-screen relative
+	if (storedWallpapers) {
+	} else
+		return (
+			<div
+				className={`h-screen relative
 		
 		bg-[#0000003c] bg-cover  bg-blend-overlay`}
-		>
-			{props.children}
-		</div>
-	);
+			>
+				{props.children}
+			</div>
+		);
 };
 
 export default Layout;
