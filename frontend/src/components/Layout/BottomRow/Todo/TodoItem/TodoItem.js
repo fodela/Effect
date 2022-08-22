@@ -36,7 +36,7 @@ const TodoItem = (props) => {
 		<span className="flex items-start ">
 			{task}
 			<div
-				className="last more  opacity-0 hover:opacity-100 hover:pointer text-xl items-center"
+				className="last more  opacity-0 hover:pointer text-xl items-center"
 				onClick={props.deleteTask}
 			>
 				...

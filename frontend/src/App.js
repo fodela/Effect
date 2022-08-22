@@ -2,6 +2,7 @@
 import BottomRow from "./components/Layout/BottomRow/BottomRow";
 import Layout from "./components/Layout/Layout";
 import MainRegion from "./components/Layout/RegionCenter/MainRegion/MainRegion";
+import TopRow from "./components/Layout/TopRow/TopRow";
 // import Weather from "./components/Weather";
 
 function App() {
@@ -13,14 +14,7 @@ function App() {
 				p-5
 				h-screen"
 				>
-					<div className="region-top flex justify-between  place-items-center">
-						<div className="logo h-12 w-12 bg-[#444] rounded-full p-1">
-							<img src="logo.png" alt="" />
-						</div>
-
-						{/* <Weather /> */}
-					</div>
-
+					<TopRow />
 					<div className="grow main "></div>
 					<div className="region-main h-1/2 ">
 						<MainRegion />
@@ -28,6 +22,7 @@ function App() {
 					<div className=" grow quote text-center w-3/4 mx-auto">
 						You can't compete with someone who is having fun
 					</div>
+					<div className="grow"></div>
 					<BottomRow />
 				</div>
 			</Layout>

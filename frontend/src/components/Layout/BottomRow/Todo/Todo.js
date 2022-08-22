@@ -15,7 +15,6 @@ class Todo extends Component {
 		const allTasks = [...this.state.allTasks];
 		allTasks[taskIndex].done = allTasks[taskIndex].done ? false : true;
 		this.setState({ allTasks: allTasks });
-		// console.log(allTasks[taskIndex]);
 	};
 
 	addTaskHandler = (event) => {
@@ -53,9 +52,9 @@ class Todo extends Component {
 			);
 		});
 		return (
-			<div className="bg-black bg-opacity-97 absolute bottom-8 right-0 w-80 p-4 ">
+			<div className="bg-black bg-opacity-70 absolute bottom-8 right-0 w-80 p-4  rounded-md">
 				<div className="todo-header">Today</div>
-				<div className="task-container max-h-[calc(60vh)] overflow-y-scroll">
+				<div className="task-container max-h-[calc(60vh)] overflow-y-auto ">
 					{tasks}
 				</div>
 				<NewTodo addTask={this.addTaskHandler} />
