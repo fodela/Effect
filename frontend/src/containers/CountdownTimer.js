@@ -73,8 +73,12 @@ class CountdownTimer extends Component {
 		}
 
 		return (
-			<div className="border-t-2 border-x-2 rounded-3xl px-5 pt-5 pb-2 after:yes border-y-none mx-auto mb-4 ">
-				<div className="text-5xl mb-4 ">
+			<div
+				className="border-t-2 border-x-2 sm:border-t-4 sm:border-x-4 rounded-3xl px-5 pt-5 pb-2 sm:px-10 sm:pb-4 after:yes border-y-none mx-auto mb-4 
+			sm:rounded-full 
+			"
+			>
+				<div className="text-5xl mb-4 sm:text-7xl sm:m-4">
 					{this.state.remainingTime.minutes} :{" "}
 					{this.state.remainingTime.seconds}
 				</div>
