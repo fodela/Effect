@@ -8,14 +8,16 @@ class CountdownTimer extends Component {
 		remainingTime: {
 			minutes: "25",
 			seconds: "00",
-			totalTimeLeft: "00",
+			totalTimeLeft: 1500,
 		},
 		counterState: "Stopped",
 	};
 
 	startTimer = () => {
 		this.timerInterval = setInterval(() => {
-			this.setState({ remainingTime: countDown() });
+			this.setState({
+				remainingTime: countDown(this.state.remainingTime.totalTimeLeft),
+			});
 		}, 1000);
 	};
 
@@ -31,7 +33,9 @@ class CountdownTimer extends Component {
 	stopTimerHandler = () => {
 		this.setState({ counterState: "Stopped" });
 		clearInterval(this.timerInterval);
-		this.setState({ remainingTime: this.props.DefaultRemainingTime });
+		this.setState({
+			remainingTime: this.props.DefaultRemainingTime,
+		});
 	};
 	render() {
 		let counterButton;
@@ -94,7 +98,7 @@ CountdownTimer.defaultProps = {
 	DefaultRemainingTime: {
 		minutes: "25",
 		seconds: "00",
-		totalTimeLeft: "00",
+		totalTimeLeft: 1500,
 	},
 };
 export default CountdownTimer;

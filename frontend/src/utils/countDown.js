@@ -1,5 +1,4 @@
-let time = 25 * 60;
-const countDown = () => {
+const countDown = (time) => {
 	let minutes = Math.floor(time / 60);
 	minutes = minutes < 10 ? "0" + minutes : minutes;
 	let seconds = Math.floor(time % 60);
