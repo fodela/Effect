@@ -5,3 +5,7 @@
 body {
 	@apply text-white;
 }
+
+.open {
+	@apply opacity-100;
+}
