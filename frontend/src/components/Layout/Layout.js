@@ -9,7 +9,6 @@ let day = 1;
 const Layout = (props) => {
 	let wallpaper;
 	let storedWallpapers = localStorage.getItem("allWallpapers");
-	let myStyle;
 
 	const getAllWallpapers = () => {
 		unsplashApi.search
@@ -48,7 +47,10 @@ const Layout = (props) => {
 		wallpaper = JSON.parse(localStorage.allWallpapers)[day].urls.raw.toString();
 	}
 	return (
-		<div className="h-screen relative bg-[#0000003c] bg-cover  bg-blend-overlay">
+		<div
+			className="h-screen relative bg-[#0000003c] bg-cover  bg-blend-overlay"
+			style={{ backgroundImage: `url(${wallpaper})` }}
+		>
 			{props.children}
 		</div>
 	);
