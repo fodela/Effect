@@ -52,7 +52,12 @@ class Todo extends Component {
 			);
 		});
 		return (
-			<div className="bg-black bg-opacity-70 absolute bottom-8 right-0 w-80 p-4  rounded-md hidden">
+			<div
+				className={
+					"bg-black bg-opacity-70 absolute bottom-8 right-0 w-80 p-4  rounded-md " +
+					this.props.todoState
+				}
+			>
 				<div className="todo-header">Today</div>
 				<div className="task-container max-h-[calc(60vh)] overflow-y-auto ">
 					{tasks}
