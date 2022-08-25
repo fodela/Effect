@@ -54,12 +54,12 @@ class Todo extends Component {
 		return (
 			<div
 				className={
-					"bg-black bg-opacity-70 absolute bottom-8 right-0 w-80 p-4  rounded-md " +
+					"bg-black bg-opacity-70 absolute bottom-8 right-0 w-80   rounded-md " +
 					this.props.todoState
 				}
 			>
-				<div className="todo-header">Today</div>
-				<div className="task-container max-h-[calc(60vh)] overflow-y-auto ">
+				<div className="todo-header p-4">Today</div>
+				<div className="task-container max-h-[60vh] overflow-y-auto p-4">
 					{tasks}
 				</div>
 				<NewTodo addTask={this.addTaskHandler} />

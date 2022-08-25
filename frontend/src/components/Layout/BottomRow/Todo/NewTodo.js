@@ -5,7 +5,7 @@ const NewTodo = (props) => {
 			name="newTodo"
 			id="newTodo"
 			placeholder="New Todo"
-			className="mx-auto  p-2 bg-black/5 w-full rounded-md border-none
+			className="mx-auto  p-2 ml-4 bg-black/5 w-full rounded-md border-none
 			"
 			onKeyUp={(event) => props.addTask(event)}
 		/>
