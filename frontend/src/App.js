@@ -2,6 +2,7 @@
 import BottomRow from "./components/Layout/BottomRow/BottomRow";
 import Layout from "./components/Layout/Layout";
 import MainRegion from "./components/Layout/RegionCenter/MainRegion/MainRegion";
+import QuoteRegion from "./components/Layout/RegionCenter/QuoteRegion/QuoteRegion";
 import TopRow from "./components/Layout/TopRow/TopRow";
 // import Weather from "./components/Weather";
 
@@ -19,9 +20,7 @@ function App() {
 					<div className="region-main h-1/2 ">
 						<MainRegion />
 					</div>
-					<div className=" grow quote text-center w-3/4 mx-auto">
-						You can't compete with someone who is having fun
-					</div>
+					<QuoteRegion />
 					<div className="grow"></div>
 					<BottomRow />
 				</div>
