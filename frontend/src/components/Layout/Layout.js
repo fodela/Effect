@@ -1,13 +1,15 @@
 // import getAllWallpapers from "../../utils/getWallpapersDetails";
+import { useState, useEffect } from "react";
 import { createApi } from "unsplash-js";
 const unsplashApi = createApi({
 	accessKey: "ssxRTObTWUTsTNRA4FCR6sUIeznLzrtbwT6JkUzWZLA",
 });
 
-let day = 1;
-
+let wallpaper =
+	"https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixid=MnwzNTQ2Nzd8MHwxfHNlYXJjaHwyfHxtb3VudGFpbiUyMHdhbGxwYXBlcnxlbnwwfHx8fDE2NjEzODMwMzU&ixlib=rb-1.2.1";
 const Layout = (props) => {
-	let wallpaper;
+	let [day, setDay] = useState(1);
+
 	let storedWallpapers = localStorage.getItem("allWallpapers");
 
 	const getAllWallpapers = () => {
@@ -18,34 +20,34 @@ const Layout = (props) => {
 				per_page: 30,
 			})
 			.then((result) => {
-				console.log("Stroeintnlkdjf", result.response.results[0].urls.raw);
 				localStorage.allWallpapers = JSON.stringify(result.response.results);
 			})
 			.catch((error) => {
 				console.log(`Something went wrong \n${error}`);
 			});
 	};
-	if (storedWallpapers && day < 30) {
-		day++;
-		// wallpaper = localStorage.getItem("allWallpapers")[day];
-		// wallpaper =
-		// 	"bg-[url('" +
-		// 	JSON.parse(localStorage.allWallpapers)[day].urls.raw.toString() +
-		// 	"')]";
 
-		// wallpaper =
-		// 	"bg-[url('" +
-		// 	JSON.parse(localStorage.allWallpapers)[day].urls.raw +
-		// 	"')]";
-		wallpaper = JSON.parse(localStorage.allWallpapers)[day].urls.raw;
-	} else {
-		getAllWallpapers();
-		// wallpaper =
-		// 	"bg-[url('" +
-		// 	JSON.parse(localStorage.allWallpapers)[day].urls.raw.toString() +
-		// 	"')]";
-		wallpaper = JSON.parse(localStorage.allWallpapers)[day].urls.raw.toString();
-	}
+	useEffect(() => {
+		const wallPaperInterval = setInterval(() => {
+			const newDay = day < 29 ? day + 1 : 0;
+			console.log(newDay);
+			setDay(newDay);
+			console.log("day changed", day);
+		}, 86400000);
+		if (storedWallpapers && day < 30) {
+			// day;
+
+			wallpaper = JSON.parse(localStorage.allWallpapers)[day].urls.raw;
+		} else {
+			getAllWallpapers();
+
+			wallpaper = JSON.parse(localStorage.allWallpapers)[
+				day
+			].urls.raw.toString();
+		}
+		return () => clearInterval(wallPaperInterval);
+	}, [day, storedWallpapers]);
+
 	return (
 		<div
 			className="h-screen relative bg-[#0000003c] bg-cover  bg-blend-overlay"
