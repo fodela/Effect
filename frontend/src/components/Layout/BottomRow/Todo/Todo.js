@@ -6,7 +6,11 @@ class Todo extends Component {
 	state = {
 		allTasks: [
 			{ description: "Go Big or go Home" },
-			{ description: "Finish Pomodoro timer", done: true },
+			{
+				description: "Finish Pomodoro timer",
+				done: true,
+				todoClass: "text-white/50 line-through",
+			},
 			{ description: "Work on presentation slides" },
 		],
 	};
@@ -14,7 +18,13 @@ class Todo extends Component {
 	changeTodoStateHandler = (taskIndex) => {
 		const allTasks = [...this.state.allTasks];
 		allTasks[taskIndex].done = allTasks[taskIndex].done ? false : true;
+
+		allTasks[taskIndex].todoClass = allTasks[taskIndex].done
+			? "text-white/50 line-through"
+			: "";
+
 		this.setState({ allTasks: allTasks });
+		console.log();
 	};
 
 	addTaskHandler = (event) => {
@@ -44,8 +54,7 @@ class Todo extends Component {
 			return (
 				<TodoItem
 					key={index}
-					done={task.done}
-					task={task.description}
+					task={task}
 					deleteTask={() => this.deleteTaskHandler(index)}
 					changeTodoState={() => this.changeTodoStateHandler(index)}
 				/>
@@ -54,7 +63,8 @@ class Todo extends Component {
 		return (
 			<div
 				className={
-					"bg-black bg-opacity-70 absolute bottom-8 right-0 w-80   rounded-md " +
+					"bg-black bg-opacity-70 absolute bottom-8 right-0 w-80   rounded-md" +
+					" " +
 					this.props.todoState
 				}
 			>

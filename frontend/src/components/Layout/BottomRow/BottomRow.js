@@ -2,9 +2,9 @@ import { useState } from "react";
 import Todo from "./Todo/Todo";
 
 const BottomRow = () => {
-	const [todoState, setTodoState] = useState("visible");
+	const [todoState, setTodoState] = useState("hidden");
 
-	const todoStateHandler = () => {
+	const showStateHandler = () => {
 		console.log("todoStateHandled");
 		if (todoState === "visible") {
 			setTodoState("hidden");
@@ -23,7 +23,7 @@ const BottomRow = () => {
 				<p>image info</p>
 			</div>
 			<div className="bottom-right relative">
-				<button onClick={todoStateHandler}>Todo</button>
+				<button onClick={showStateHandler}>Todo</button>
 				<Todo todoState={todoState} />
 			</div>
 		</div>
