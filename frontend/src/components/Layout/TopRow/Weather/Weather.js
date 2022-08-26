@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import getWeatherDetails from "../../../utils/getWeatherDetails";
+import getWeatherDetails from "../../../../utils/getWeatherDetails";
 const Weather = () => {
 	const [weatherDetails, setWeatherDetails] = useState(null);
 

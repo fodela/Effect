@@ -7,6 +7,7 @@ const unsplashApi = createApi({
 
 let wallpaper =
 	"https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixid=MnwzNTQ2Nzd8MHwxfHNlYXJjaHwyfHxtb3VudGFpbiUyMHdhbGxwYXBlcnxlbnwwfHx8fDE2NjEzODMwMzU&ixlib=rb-1.2.1";
+
 const Layout = (props) => {
 	let [day, setDay] = useState(1);
 

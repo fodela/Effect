@@ -4,16 +4,17 @@ import Layout from "./components/Layout/Layout";
 import MainRegion from "./components/Layout/RegionCenter/MainRegion/MainRegion";
 import QuoteRegion from "./components/Layout/RegionCenter/QuoteRegion/QuoteRegion";
 import TopRow from "./components/Layout/TopRow/TopRow";
-// import Weather from "./components/Weather";
 
 function App() {
 	return (
 		<div>
-			<Layout className="">
+			<Layout className=" relative">
 				<div
 					className="flex flex-col justify-start
 				p-5
-				h-screen"
+				h-[100vh]
+				
+				"
 				>
 					<TopRow />
 					<div className="grow main "></div>

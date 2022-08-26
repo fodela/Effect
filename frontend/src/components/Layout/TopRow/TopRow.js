@@ -1,3 +1,5 @@
+import WeatherDetails from "./Weather/WeatherDetails";
+
 const TopRow = () => {
 	return (
 		<div className="region-top flex justify-between  place-items-center">
@@ -5,7 +7,9 @@ const TopRow = () => {
 				<img src="logo.png" alt="" />
 			</div>
 
-			{/* <Weather /> */}
+			<div className="sm:relative">
+				<WeatherDetails />
+			</div>
 		</div>
 	);
 };
