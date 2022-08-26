@@ -16,6 +16,9 @@ const WeatherDetails = () => {
 					<i>Cl</i>
 					<h2>24°</h2>
 				</div>
+				<div className="text-xs text-right">
+					<strong>Accuweather</strong> more weather &rarr;
+				</div>
 				<section></section>
 			</div>
 			<div></div>
