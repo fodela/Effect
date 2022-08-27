@@ -1,8 +1,11 @@
 // import getAllWallpapers from "../../utils/getWallpapersDetails";
 import { useState, useEffect } from "react";
 import { createApi } from "unsplash-js";
+
+const { REACT_APP_UNSPLASH_ACCESS_KEY } = process.env;
+
 const unsplashApi = createApi({
-	accessKey: "ssxRTObTWUTsTNRA4FCR6sUIeznLzrtbwT6JkUzWZLA",
+	accessKey: REACT_APP_UNSPLASH_ACCESS_KEY,
 });
 
 let wallpaper =
