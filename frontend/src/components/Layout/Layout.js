@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { createApi } from "unsplash-js";
 
+const MILLISECONDS_IN_A_DAY = 86400000;
+
 const { REACT_APP_UNSPLASH_ACCESS_KEY } = process.env;
 
 const unsplashApi = createApi({
@@ -37,7 +39,7 @@ const Layout = (props) => {
 			console.log(newDay);
 			setDay(newDay);
 			console.log("day changed", day);
-		}, 86400000);
+		}, MILLISECONDS_IN_A_DAY);
 		if (storedWallpapers && day < 30) {
 			// day;
 
