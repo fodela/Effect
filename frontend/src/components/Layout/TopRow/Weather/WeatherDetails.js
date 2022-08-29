@@ -1,32 +1,32 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 // const { REACT_APP_ACCUWEATHER_ACCESS_KEY } = process.env;
 
 let location = "ho ghana";
 
 const WeatherDetails = () => {
-	const [weatherInfo, setWeatherInfo] = useState(null);
+	const [locationDetails, setLocationDetails] = useState(null);
 
-	const getLocationKey = () => {
+	const getLocationDetails = (searchedLocation) => {
 		console.log("location funx");
 		axios
 			.get(
-				`http://dataservice.accuweather.com/locations/v1/cities/search?apikey=Z7BLjCA9DVKV1q2GQR9bjmNbZcvcH4a3&q=${location}`
+				`http://dataservice.accuweather.com/locations/v1/cities/search?apikey=Z7BLjCA9DVKV1q2GQR9bjmNbZcvcH4a3&q=${searchedLocation}`
 			)
 			.then((response) => {
-				setWeatherInfo(response.data[0]);
-				localStorage.currentLocationForEffect = JSON.stringify(weatherInfo);
-			});
+				setLocationDetails(response.data[0]);
+				localStorage.currentLocationDetails = JSON.stringify(locationDetails);
+				return locationDetails;
+			})
+			.catch((err) => console.log(err));
+		console.log(localStorage.currentLocationDetails);
 	};
+	const myLocation = useMemo(
+		() => getLocationDetails(location),
+		[locationDetails]
+	);
 
-	const getLocationInfo = () => {
-		if (localStorage.currentLocationForEffect) {
-			setWeatherInfo(JSON.parse(localStorage.currentLocationForEffect));
-		} else {
-			// getLocationKey();
-		}
-	};
 	// getLocationInfo();
 
 	// console.log("api key", REACT_APP_ACCUWEATHER_ACCESS_KEY);
