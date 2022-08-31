@@ -12,7 +12,7 @@ DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 
 # Define database variables
 database_name = "effect_db"
-database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{'localhost:5432'}/{database_name}"
+database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5432/{database_name}"
 
 # instantiate the database
 db = SQLAlchemy()
