@@ -1,5 +1,5 @@
-import email
 import os
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -38,7 +38,7 @@ def setup_db(app, database_path=database_path):
 
     """
     class Task(db.Model):
-        __table__name = "tasks"
+        __table__name = "Task"
 
         id = db.Column(db.Integer, primary_key=True)
         description = db.Column(db.String, nullable=False)
@@ -47,10 +47,14 @@ def setup_db(app, database_path=database_path):
         user_id = db.ForeignKey("User.id", nullable=False)
         task_state_id = db.ForeignKey("TaskState.id", nullable=False)
         deadline = db.Column(db.DateTime)
-        created_at = db.Column(db.DateTime)
+        created_at = db.Column(
+            db.DateTime, nullable=False, default=datetime.utcnow)
         updated_at = db.Column(db.DateTime)
+        task_category = db.relationship(
+            "TaskCategory", backref="task", lazy=True)
 
     class TaskState(db.Model):
+        __Table__name = "TaskState"
         id = db.Column(db.Integer, primary_key=True)
         is_completed = db.Column(db.Boolean)
         is_delegated = db.Column(db.Boolean)
@@ -58,12 +62,22 @@ def setup_db(app, database_path=database_path):
         is_due = db.Column(db.Boolean)
 
     class User(db.Model):
-        __Table__name = "user"
+        __Table__name = "User"
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String)
         email = db.Column(db.Email)
 
     class Category(db.Model):
-        __Table__name = "category"
+        __Table__name = "Category"
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String)
+        task_category = db.relationship(
+            "TaskCategory", backref="category", lazy=True)
+
+    class TaskCategory(db.Model):
+        __Table__name = "TaskCategory"
+        id = db.Column(db.Integer, primary_key=True)
+        task_id = db.Column(db.Integer,  db.ForeignKey(
+            "Task.id"), nullable=False)
+        category_id = db.Column(db.Integer, db.ForeignKey(
+            "Category.id"), nullable=False)
