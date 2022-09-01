@@ -51,7 +51,7 @@ def setup_db(app, database_path=database_path):
             db.session.commit()
 
     """
-    Tasks
+    Task
 
     """
     class Task(db.Model, CRUD):
@@ -87,7 +87,12 @@ def setup_db(app, database_path=database_path):
         def __repr__(self):
             return f"<Task | ID: {self.id} Description: {self.description}>"
 
-    class TaskState(db.Model):
+    """
+    TaskState
+
+    """
+
+    class TaskState(db.Model, CRUD):
         __Table__name = "TaskState"
         id = db.Column(db.Integer, primary_key=True)
         is_completed = db.Column(db.Boolean)
@@ -107,7 +112,12 @@ def setup_db(app, database_path=database_path):
         def __repr__(self):
             return f"<TaskState | ID: {self.id} {'Completed' if self.is_completed else 'Not completed'} {'Delegated' if self.is_delegated else ''} {'Due' if self.is_due else ''}>"
 
-    class User(db.Model):
+    """
+    User
+
+    """
+
+    class User(db.Model, CRUD):
         __Table__name = "User"
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String)
@@ -123,7 +133,12 @@ def setup_db(app, database_path=database_path):
         def __repr__(self):
             return f"<User | ID: {self.id} Username: {self.username}>"
 
-    class Category(db.Model):
+    """
+    Category
+
+    """
+
+    class Category(db.Model, CRUD):
         __Table__name = "Category"
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String)
@@ -139,7 +154,12 @@ def setup_db(app, database_path=database_path):
         def __repr__(self):
             return f"<Category | ID: {self.id} Name: {self.name}>"
 
-    class TaskCategory(db.Model):
+    """
+    TaskCategory
+
+    """
+
+    class TaskCategory(db.Model, CRUD):
         __Table__name = "TaskCategory"
         id = db.Column(db.Integer, primary_key=True)
         task_id = db.Column(db.Integer,  db.ForeignKey(
