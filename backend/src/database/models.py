@@ -113,6 +113,13 @@ def setup_db(app, database_path=database_path):
         username = db.Column(db.String)
         email = db.Column(db.Email)
 
+        def format(self):
+            return {
+                "id": self.id,
+                "username": self.username,
+                "email": self.email
+            }
+
         def __repr__(self):
             return f"<User | ID: {self.id} Username: {self.username}>"
 
