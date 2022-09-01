@@ -34,10 +34,27 @@ def setup_db(app, database_path=database_path):
     db.create_all()
 
     """
+    CRUD 
+        add CRUD to each model while respecting the DRY (Don't Repeat Yourself) principle
+    
+    """
+    class CRUD():
+        def insert(self):
+            db.session.add(self)
+            db.session.commit()
+
+        def update(self):
+            db.session.commit()
+
+        def delete(self):
+            db.session.delete(self)
+            db.session.commit()
+
+    """
     Tasks
 
     """
-    class Task(db.Model):
+    class Task(db.Model, CRUD):
         __table__name = "Task"
 
         id = db.Column(db.Integer, primary_key=True)
