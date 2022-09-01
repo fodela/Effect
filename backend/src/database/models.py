@@ -1,3 +1,4 @@
+import email
 import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -52,10 +53,11 @@ def setup_db(app, database_path=database_path):
     class TaskState(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         is_completed = db.Column(db.Boolean)
-        is_deligated = db.Column(db.Boolean)
+        is_delegated = db.Column(db.Boolean)
         do_immediately = db.Column(db.Boolean)
         is_due = db.Column(db.Boolean)
 
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
-        # TODO: complete the table
+        username = db.Column(db.String)
+        email = db.Column(db.Email)
