@@ -16,10 +16,6 @@ database_name = "effect_db"
 database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{'localhost:5432'}/{database_name}"
 
 
-# database_path = "postgresql://{}:{}@{}/{}".format(
-# DB_USERNAME, DB_PASSWORD, "localhost:5432", database_name
-# )
-
 # instantiate the database
 db = SQLAlchemy()
 
@@ -35,3 +31,28 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.create_all()
+
+    """
+    Tasks
+
+    """
+    class Task(db.Model):
+        __table__name = "tasks"
+
+        id = db.Column(db.Integer, primary_key=True)
+        description = db.Column(db.String, nullable=False)
+        duration = db.Column(db.Integer)
+        priority = db.Column(db.Integer)
+        user_id = db.ForeignKey("User.id", nullable=False)
+        task_state_id = db.ForeignKey("TaskState.id", nullable=False)
+        deadline = db.Column(db.DateTime)
+        created_at = db.Column(db.DateTime)
+        updated_at = db.Column(db.DateTime)
+
+    class TaskState(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        # TODO: complete the table
+
+    class User(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        # TODO: complete the table
