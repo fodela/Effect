@@ -53,6 +53,9 @@ def setup_db(app, database_path=database_path):
         task_category = db.relationship(
             "TaskCategory", backref="task", lazy=True)
 
+        def __repr__(self):
+            return f"<Task | ID: {self.id} Description: {self.description}>"
+
     class TaskState(db.Model):
         __Table__name = "TaskState"
         id = db.Column(db.Integer, primary_key=True)
@@ -61,11 +64,17 @@ def setup_db(app, database_path=database_path):
         do_immediately = db.Column(db.Boolean)
         is_due = db.Column(db.Boolean)
 
+        def __repr__(self):
+            return f"<TaskState | ID: {self.id} {'Completed' if self.is_completed else 'Not completed'} {'Delegated' if self.is_delegated else ''} {'Due' if self.is_due else ''}>"
+
     class User(db.Model):
         __Table__name = "User"
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String)
         email = db.Column(db.Email)
+
+        def __repr__(self):
+            return f"<User | ID: {self.id} Username: {self.username}>"
 
     class Category(db.Model):
         __Table__name = "Category"
@@ -74,6 +83,9 @@ def setup_db(app, database_path=database_path):
         task_category = db.relationship(
             "TaskCategory", backref="category", lazy=True)
 
+        def __repr__(self):
+            return f"<Category | ID: {self.id} Name: {self.name}>"
+
     class TaskCategory(db.Model):
         __Table__name = "TaskCategory"
         id = db.Column(db.Integer, primary_key=True)
@@ -81,3 +93,6 @@ def setup_db(app, database_path=database_path):
             "Task.id"), nullable=False)
         category_id = db.Column(db.Integer, db.ForeignKey(
             "Category.id"), nullable=False)
+
+        def __repr__(self):
+            return f"<TaskCategory | ID: {self.id}>"
