@@ -58,6 +58,12 @@ def setup_db(app, database_path=database_path):
         is_due = db.Column(db.Boolean)
 
     class User(db.Model):
+        __Table__name = "user"
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String)
         email = db.Column(db.Email)
+
+    class Category(db.Model):
+        __Table__name = "category"
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String)
