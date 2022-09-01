@@ -95,6 +95,15 @@ def setup_db(app, database_path=database_path):
         do_immediately = db.Column(db.Boolean)
         is_due = db.Column(db.Boolean)
 
+        def format(self):
+            return {
+                "id": self.id,
+                "is_delegated": self.is_delegated,
+                "do_immediately": self.do_immediately,
+                "is_completed": self.is_completed,
+                "is_due": self.is_due
+            }
+
         def __repr__(self):
             return f"<TaskState | ID: {self.id} {'Completed' if self.is_completed else 'Not completed'} {'Delegated' if self.is_delegated else ''} {'Due' if self.is_due else ''}>"
 
