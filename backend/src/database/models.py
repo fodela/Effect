@@ -70,6 +70,20 @@ def setup_db(app, database_path=database_path):
         task_category = db.relationship(
             "TaskCategory", backref="task", lazy=True)
 
+        def format(self):
+            return {
+                "id": self.id,
+                "description": self.description,
+                "duration": self.duration,
+                "priority": self.priority,
+                "user_id": self.user_id,
+                "task_state_id": self.task_state_id,
+                "deadline": self.deadline,
+                "created_at": self.created_at,
+                "updated_at": self.updated_at
+
+            }
+
         def __repr__(self):
             return f"<Task | ID: {self.id} Description: {self.description}>"
 
