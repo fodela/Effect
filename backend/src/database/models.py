@@ -1,5 +1,7 @@
+from enum import unique
 import os
 from datetime import datetime
+import string
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -27,6 +29,13 @@ setup_db(app)
 
 
 def setup_db(app, database_path=database_path):
+    """binds a flask application and SQLALchemy service
+
+    args:
+    app -- this is the name of the application
+    database -- this is the DATABASE URI used to configure the app
+    """
+
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
@@ -39,6 +48,9 @@ def setup_db(app, database_path=database_path):
     
     """
     class CRUD():
+        """Creates updates and deletes data from the database
+        """
+
         def insert(self):
             db.session.add(self)
             db.session.commit()
@@ -65,8 +77,8 @@ def setup_db(app, database_path=database_path):
         task_state_id = db.ForeignKey("TaskState.id", nullable=False)
         deadline = db.Column(db.DateTime)
         created_at = db.Column(
-            db.DateTime, nullable=False, default=datetime.utcnow)
-        updated_at = db.Column(db.DateTime)
+            db.DateTime, nullable=False, default=datetime.now())
+        updated_at = db.Column(db.DateTime, onupdate=datetime.now())
         task_category = db.relationship(
             "TaskCategory", backref="task", lazy=True)
 
@@ -120,8 +132,12 @@ def setup_db(app, database_path=database_path):
     class User(db.Model, CRUD):
         __Table__name = "User"
         id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String)
-        email = db.Column(db.Email)
+        username = db.Column(db.String(80), unique=True, nullable=False)
+        email = db.Column(db.String(120), unique=True, nullable=False)
+        password = db.Column(db.Text(), nullable=False)
+        created_at = db.Column(
+            db.DateTime, nullable=False, default=datetime.now())
+        updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
         def format(self):
             return {
@@ -162,10 +178,10 @@ def setup_db(app, database_path=database_path):
     class TaskCategory(db.Model, CRUD):
         __Table__name = "TaskCategory"
         id = db.Column(db.Integer, primary_key=True)
-        task_id = db.Column(db.Integer,  db.ForeignKey(
-            "Task.id"), nullable=False)
-        category_id = db.Column(db.Integer, db.ForeignKey(
-            "Category.id"), nullable=False)
+        task_id = db.ForeignKey(
+            "Task.id", nullable=False)
+        category_id = db.ForeignKey(
+            "Category.id", nullable=False)
 
         def __repr__(self):
             return f"<TaskCategory | ID: {self.id}>"

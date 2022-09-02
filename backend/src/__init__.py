@@ -37,4 +37,14 @@ def create_app(test_config=None):
     def about_effect():
         return jsonify({"about": "Effect is a productivity app that combines the pomodoro technique and the "})
 
+    # TODO: Get Task
+
+    # TODO: POST Task
+
+    # TODO: PATCH Task
+
+    # TODO: DELETE Task
+
+    # TODO: GET User
+
     return app
