@@ -22,10 +22,14 @@ const WeatherDetails = () => {
 			.catch((err) => console.log(err));
 		console.log(localStorage.currentLocationDetails);
 	};
-	const myLocation = useMemo(
-		() => getLocationDetails(location),
-		[locationDetails]
-	);
+	// const myLocation = useMemo(
+	// 	() => getLocationDetails(location),
+	// 	[locationDetails]
+	// );
+
+	const getWeatherDetails = (location) => {
+		axios.get();
+	};
 
 	// getLocationInfo();
 
