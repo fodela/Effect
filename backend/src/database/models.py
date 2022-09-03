@@ -1,7 +1,6 @@
-from enum import unique
 import os
 from datetime import datetime
-import string
+from typing import Dict
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -41,13 +40,6 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.create_all()
-
-
-"""
-CRUD 
-    add CRUD to each model while respecting the DRY (Don't Repeat Yourself) principle
-
-"""
 
 
 class CRUD():
@@ -99,7 +91,7 @@ class Task(db.Model, CRUD):
             "task_state_id": self.task_state_id,
             "deadline": self.deadline,
             "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "updated_at": self.updated_at,
 
         }
 
@@ -150,11 +142,13 @@ class User(db.Model, CRUD):
         db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
-    def format(self):
+    def format(self) -> Dict:
         return {
             "id": self.id,
             "username": self.username,
-            "email": self.email
+            "email": self.email,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
         }
 
     def __repr__(self):
