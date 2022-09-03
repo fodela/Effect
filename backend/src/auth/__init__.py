@@ -1,5 +1,6 @@
 # import validators
 import json
+from typing import Dict, List
 from flask import Blueprint, request,  jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -8,53 +9,63 @@ auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
 
 @auth.post("/register")
-def register():
+def register() -> Dict:
     # def username email and password from request
-    username = request.json["username"]
-    email = request.json["email"]
-    password = request.json["password"]
+    username: str = request.json["username"]
+    email: str = request.json["email"]
+    password: str = request.json["password"]
 
     # check if password is > 8 xters
-    if len(password) < 8:
-        return jsonify({
-            "message": "error",
-            "status_code": 400,
-            "message": "password is too short"
-        }, 400)
+    if len(password) <= 8:
+        abort(400, "password is too short. Password must be at least 8 characters")
 
     # username must be greater than 3 xters
-    if len(username) < 3:
-        abort(404)
+    if len(username) <= 3:
+        abort(400, "username is too short. username must be 3 characters or more")
+
     # username must be alphanumeric
     if not username.isalnum() or " " in username:
-        abort(404)
+        abort(400, "username must contain alphabet and numbers only and must not contain spaces")
 
     # check if username already exist
     # validate email
     # if not validator.email(email):
-    #     abort(404)
-    # if User.query.filter_by(username=username).first() is not None:
-        abort(400)
+    #     abort(400)
+    if User.query.filter_by(username=username).first() is not None:
+        abort(409, "username already exist. Chose a different username")
 
     # check if email already exist
     if User.query.filter_by(email=email).first() is not None:
-        abort(4000)
+        abort(409, "email already exist.")
 
     # hash the password
     pwd_hash = generate_password_hash(password)
 
-    user = User(username=username, password=pwd_hash, email=email)
+    try:
+        user = User(username=username, password=pwd_hash, email=email)
 
-    user.insert()
+        user.insert()
 
-    return jsonify({
-        "message": "User created",
-        "user": {
-            "username": username, "email": email
-        }
-    })
+        return jsonify({
+            "message": "User created",
+            "user": {
+                "username": username, "email": email
+            }
+        })
+    except Exception as e:
+        abort(e.code)
 
 
 @auth.get("/me")
-def me():
-    return {"user": "me"}
+def me() -> Dict:
+    users_query = User.query.all()
+    users: List = [user.format() for user in users_query]
+
+    if users_query:
+        return jsonify({
+            "success": True,
+            "users": users
+        }
+        )
+    else:
+        abort(400)

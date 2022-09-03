@@ -43,16 +43,14 @@ def unprocessable(error):
 
 
 @app.errorhandler(409)
-def conflict(error):
-    return (
-        jsonify(
-            {
-                "success": False,
-                "error": 409,
-                "message": f"conflict: {error.description}"
-            }
-        ), 409
-    )
+def conflict(error) -> Dict:
+    return jsonify(
+        {
+            "success": False,
+            "error": 409,
+            "message": f"conflict: {error.description}"
+        }
+    ), 409
 
 
 @app.errorhandler(500)

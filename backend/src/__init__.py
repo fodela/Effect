@@ -1,7 +1,10 @@
 from flask import Flask, jsonify
 
+
 from .database.models import setup_db
 from flask_cors import CORS
+from .auth import auth
+# from .error_handlers import *
 
 # app = Flask(__name__)
 """
@@ -29,22 +32,6 @@ def create_app(test_config=None):
 
         return response
 
-    @app.route("/")
-    def hello_effect():
-        return jsonify({"message": "hello effect!"})
-
-    @app.route("/about")
-    def about_effect():
-        return jsonify({"about": "Effect is a productivity app that combines the pomodoro technique and the "})
-
-    # TODO: Get Task
-
-    # TODO: POST Task
-
-    # TODO: PATCH Task
-
-    # TODO: DELETE Task
-
-    # TODO: GET User
+    app.register_blueprint(auth)
 
     return app
