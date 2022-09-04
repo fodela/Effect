@@ -110,3 +110,17 @@ def me() -> Dict[str, str]:
         ), 200
     else:
         abort(400)
+
+
+@auth.get("/token/refresh")
+@jwt_required()
+def refresh_user_token():
+    # get user_id
+    user_id: int = get_jwt_identity()
+
+    # create access token
+    access_token = create_access_token(identity=user_id)
+
+    return jsonify({
+        "access_token": access_token
+    })
