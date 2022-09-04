@@ -2,9 +2,13 @@ import os
 from flask import Flask, jsonify
 from .database.models import setup_db
 from flask_cors import CORS
-from .auth import auth
+
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+
+# import Blueprints
+from .auth import auth
+from .endpoints.task import task
 
 
 load_dotenv()
@@ -50,5 +54,6 @@ def create_app(test_config=None):
     JWTManager(app)
 
     app.register_blueprint(auth)
+    app.register_blueprint(task)
 
     return app
