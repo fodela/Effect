@@ -3,7 +3,11 @@ import json
 from typing import Dict, List
 from flask import Blueprint, request,  jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import (jwt_required,
+                                create_access_token,
+                                create_refresh_token,
+                                get_jwt_identity
+                                )
 
 from ..database.models import User
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
@@ -91,15 +95,18 @@ def login():
 
 
 @auth.get("/me")
-def me() -> Dict:
-    users_query = User.query.all()
-    users: List = [user.format() for user in users_query]
+@jwt_required()
+def me() -> Dict[str, str]:
+    user_id = get_jwt_identity()
 
-    if users_query:
+    user_query = User.query.get(user_id)
+    user: List = user_query.format()
+
+    if user:
         return jsonify({
             "success": True,
-            "users": users
+            "user": user
         }
-        )
+        ), 200
     else:
         abort(400)
