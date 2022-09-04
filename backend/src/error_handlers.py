@@ -1,19 +1,7 @@
+from typing import Dict
 from flask import Flask, jsonify
 
 app = Flask("src")
-
-
-@app.errorhandler(400)
-def conflict(error):
-    return (
-        jsonify(
-            {
-                "success": False,
-                "error": 400,
-                "message": f"conflict: {error.description}"
-            }
-        ), 400
-    )
 
 
 @app.errorhandler(404)
@@ -43,7 +31,7 @@ def unprocessable(error):
 
 
 @app.errorhandler(409)
-def conflict(error) -> Dict:
+def conflict(error) -> tuple:
     return jsonify(
         {
             "success": False,
@@ -54,7 +42,7 @@ def conflict(error) -> Dict:
 
 
 @app.errorhandler(500)
-def server_error(error) -> Dict:
+def server_error(error) -> tuple:
     return (
         jsonify(
             {

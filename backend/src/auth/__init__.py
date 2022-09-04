@@ -3,13 +3,14 @@ import json
 from typing import Dict, List
 from flask import Blueprint, request,  jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 from ..database.models import User
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
 
 @auth.post("/register")
-def register() -> Dict:
+def register():
     # def username email and password from request
     username: str = request.json["username"]
     email: str = request.json["email"]
@@ -54,6 +55,39 @@ def register() -> Dict:
         })
     except Exception as e:
         abort(e.code)
+
+# [x]: login
+
+
+@auth.post("/login")
+def login():
+    email: str = request.json.get("email", "")
+    password: str = request.json.get("password", "")
+
+    user = User.query.filter_by(email=email).first()
+
+    if user:
+        # Password validation
+        is_pwd_correct = check_password_hash(user.password, password)
+
+        if is_pwd_correct:
+            refresh_token = create_refresh_token(identity=user.id)
+
+            access_token = create_access_token(identity=user.id)
+
+            return jsonify(
+                {
+                    "success": True,
+                    "code": 200,
+                    "refresh_token": refresh_token,
+                    "access_token": access_token,
+                    "username": user.username,
+                    "email": user.email,
+
+                }
+            )
+
+    abort(401)
 
 
 @auth.get("/me")
