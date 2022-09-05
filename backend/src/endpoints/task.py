@@ -8,8 +8,9 @@ from ..database import models
 
 task = Blueprint("task", __name__, url_prefix="/api/v1")
 
+# [] GET /tasks
 
-# [] POST /tasks
+# [x] POST /tasks
 
 
 @task.post("/tasks")
@@ -57,9 +58,6 @@ def get_tasks() -> Dict[str, str]:
     ), 200
 
 # [] PATCH /tasks
-
-
-# [] GET /tasks
 
 
 # [] DELETE /tasks
