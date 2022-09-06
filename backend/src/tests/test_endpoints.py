@@ -30,9 +30,14 @@ class EffectTestCase(unittest.TestCase):
         self.database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5432/{self.database_name} "
 
         setup_db(self.app, self.database_path)
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
+
+        def tearDown(self):
+            """Executed after reach test
+            """
