@@ -41,3 +41,6 @@ class EffectTestCase(unittest.TestCase):
         def tearDown(self):
             """Executed after reach test
             """
+
+        def test_auth_register(self):
+            pass
