@@ -44,6 +44,10 @@ class EffectTestCase(unittest.TestCase):
             "password": "testpassword"
         }
 
+        self.new_category = {
+            "name": "academics"
+        }
+
         def tearDown(self):
             """Executed after reach test
             """
