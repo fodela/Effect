@@ -38,9 +38,52 @@ class EffectTestCase(unittest.TestCase):
             # create all tables
             self.db.create_all()
 
+        self.new_user = {
+            "username": "Laura",
+            "email": "laura@email.com",
+            "password": "testpassword"
+        }
+
         def tearDown(self):
             """Executed after reach test
             """
 
+        # [] test_auth_register
         def test_auth_register(self):
+            pass
+
+        # [] test_auth_login
+        def test_auth_login(self):
+            pass
+
+        # [] test_get_tasks
+        def test_get_tasks(self):
+            pass
+
+        # [] test_post_tasks
+        def test_post_tasks(self):
+            pass
+
+        # [] test_patch_tasks
+        def test_patch_tasks(self):
+            pass
+
+        # [] test_delete_tasks
+        def test_delete_tasks(self):
+            pass
+
+        # [] test_get_categories
+        def test_get_categories(self):
+            pass
+
+        # [] test_post_categories
+        def test_post_categories(self):
+            pass
+
+        # [] test_patch_categories
+        def test_patch_categories(self):
+            pass
+
+        # [] test_delete_categories
+        def test_delete_categories(self):
             pass
