@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 # import Blueprints
 from .auth import auth
-from .endpoints.task import task
+from .endpoints.tasks import task
 
 
 load_dotenv()

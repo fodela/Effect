@@ -1,6 +1,7 @@
 
 import os
 import unittest
+import json
 
 from backend.src import create_app
 from backend.src.database.models import setup_db
@@ -60,12 +61,27 @@ class EffectTestCase(unittest.TestCase):
         def test_auth_login(self):
             pass
 
-        # [] test_get_tasks
+        # [x] test_get_tasks
         def test_get_tasks(self):
+            #  make api call
+            res = self.client.get("/tasks")
+
+            # store the data
+            data = json.loads(res.data)
+
+            # check success is True
+            self.assertEqual(data["success"], True)
+
+            # check status code
+            self.assertEqual(data["code"], 200)
+
+            # Ensure that there are tasks
+            self.assertTrue(len(data["tasks"]))
             pass
 
         # [] test_post_tasks
         def test_post_tasks(self):
+
             pass
 
         # [] test_patch_tasks

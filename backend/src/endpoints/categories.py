@@ -1,4 +1,3 @@
-from tarfile import BLKTYPE
 from flask import Blueprint
 
 category = Blueprint("category", __name__, url_prefix="/api/v1")
@@ -15,16 +14,14 @@ def get_categories(self):
 def post_categories(self):
     pass
 
+
 # [] patch categories
-
-
 @category.patch("categories")
 def patch_categories(self):
     pass
 
+
 # [] delete categories
-
-
 @category.delete("categories")
 def delete_categories(self):
     pass
