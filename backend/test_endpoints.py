@@ -13,10 +13,10 @@ from flask_sqlalchemy import SQLAlchemy
 # Makes available all environment variables from the .env file
 # load_env()
 
-# DATABASE_USERNAME = os.getenv("DATABASE_USERNAME")
+DATABASE_USERNAME = os.getenv("DATABASE_USERNAME")
 # DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 
-DATABASE_USERNAME = "fodela"
+# DATABASE_USERNAME = "fodela"
 DATABASE_PASSWORD = "f0d3la"
 
 
@@ -72,21 +72,21 @@ class EffectTestCase(unittest.TestCase):
     #     pass
 
     # # [x] test_get_tasks
-    # # def test_get_tasks(self):
-    # #     #  make api call
-    # #     res = self.client.get("/tasks")
+    def test_get_tasks(self):
+        #  make api call
+        res = self.client.get("/tasks")
 
-    # #     # store the data
-    # #     data = json.loads(res.data)
+        # store the data
+        data = json.loads(res.data)
 
-    # #     # check success is True
-    # #     self.assertEqual(data["success"], True)
+        # check success is True
+        self.assertEqual(data["success"], True)
 
-    # #     # check status code
-    # #     self.assertEqual(data["code"], 200)
-    # #     print("worked")
-    # #     # Ensure that there is a list of tasks
-    # #     self.assertTrue(len(data["tasks"]))
+        # check status code
+        self.assertEqual(data["code"], 200)
+        print("worked")
+        # Ensure that there is a list of tasks
+        self.assertTrue(len(data["tasks"]))
     # #     self.assertIsInstance(data["tasks"], list)
 
     # # [] test_404_get_tasks
