@@ -1,6 +1,6 @@
 import os
 from flask import Flask, jsonify
-from .database.models import setup_db
+from .database import models
 from flask_cors import CORS
 
 from flask_jwt_extended import JWTManager
@@ -34,7 +34,7 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    setup_db(app)
+    models.setup_db(app)
 
     CORS(app, resources={r"api/*": {"origin": "*"}})
 

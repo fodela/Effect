@@ -60,9 +60,8 @@ def register():
     except Exception as e:
         abort(e.code)
 
+
 # [x]: login
-
-
 @auth.post("/login")
 def login():
     email: str = request.json.get("email", "")
