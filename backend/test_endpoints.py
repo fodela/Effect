@@ -6,18 +6,15 @@ import json
 from src.database import models
 from src import create_app
 
-# from dotenv import load_env
+from dotenv import load_dotenv
 
 from flask_sqlalchemy import SQLAlchemy
 
 # Makes available all environment variables from the .env file
-# load_env()
+load_dotenv()
 
 DATABASE_USERNAME = os.getenv("DATABASE_USERNAME")
-# DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
-
-# DATABASE_USERNAME = "fodela"
-DATABASE_PASSWORD = "f0d3la"
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 
 
 class EffectTestCase(unittest.TestCase):
@@ -32,16 +29,22 @@ class EffectTestCase(unittest.TestCase):
         self.client = self.app.test_client
         self.database_name = "effect_test_db"
 
-        self.database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5432/{self.database_name} "
+        self.database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5432/{self.database_name}"
 
         models.setup_db(self.app, self.database_path)
 
         # binds the app to the current context
         with self.app.app_context():
-            self.db = SQLAlchemy()
-            self.db.init_app(self.app)
-            # create all tables
-            self.db.create_all()
+            db = SQLAlchemy()
+            db.init_app(self.app)
+            # db.drop_all()
+            # db.create_all()
+            # db.session.commit()
+            # db.create_all()
+            # delete, create all tables and testcases
+            # db_drop_and_create_all(db)
+            print("sd", db.create_all())
+            print("#############dropped")
 
         self.new_user = {
             "username": "Laura",
@@ -63,9 +66,14 @@ class EffectTestCase(unittest.TestCase):
 
     # # [] test_auth_register
     def test_auth_register(self):
-        self.assertEqual(2, "2")
+        res = self.client().post("api/v1/auth/register", json=self.new_user)
+        data = json.loads(res.data)
+        print("$$$$$$$$$ ", data)
 
-    #     pass
+        self.assertEqual(data["success"], True)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data["message"])
+        self.assertTrue(data["user"])
 
     # # [] test_auth_login
     # def test_auth_login(self):
@@ -74,20 +82,19 @@ class EffectTestCase(unittest.TestCase):
     # # [x] test_get_tasks
     def test_get_tasks(self):
         #  make api call
-        res = self.client.get("/tasks")
+        res = self.client().get("api/v1/tasks")
 
         # store the data
         data = json.loads(res.data)
-
-        # check success is True
+    #     # check success is True
         self.assertEqual(data["success"], True)
 
-        # check status code
+    #     # check status code
         self.assertEqual(data["code"], 200)
-        print("worked")
-        # Ensure that there is a list of tasks
-        self.assertTrue(len(data["tasks"]))
-    # #     self.assertIsInstance(data["tasks"], list)
+    #     print("worked")
+    # #     # Ensure that there is a list of tasks
+    #     self.assertTrue(len(data["tasks"]))
+    #     self.assertIsInstance(data["tasks"], list)
 
     # # [] test_404_get_tasks
     # def test_404_get_tasks(self):

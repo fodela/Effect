@@ -21,7 +21,7 @@ def register():
     password: str = request.json["password"]
 
     # check if password is > 8 xters
-    if len(password) <= 8:
+    if len(password) < 8:
         abort(400, "password is too short. Password must be at least 8 characters")
 
     # username must be greater than 3 xters
@@ -52,6 +52,8 @@ def register():
         user.insert()
 
         return jsonify({
+            "success": True,
+            "code": 200,
             "message": "User created",
             "user": {
                 "username": username, "email": email

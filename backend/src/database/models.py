@@ -39,7 +39,39 @@ def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
+    db_drop_and_create_all()
+
+
+def db_drop_and_create_all() -> None:
+    """drop and recreates all tables. Also creates a demo user & task testing
+
+    Args:
+        db (_type_): an instance of our database
+    """
+    db.drop_all()
     db.create_all()
+
+    # add one test case to help with testing
+    # user
+    user = User(
+        username="testuser",
+        password="password",
+        email="testuser@email.com"
+    )
+    # user.insert()
+    db.session.add(User(
+        username="newOne",
+        password="password",
+        email="newOne@email.com"
+    ))
+    # db.session.commit()
+
+    # task
+    task = Task(
+        description="test our endpoints",
+        user_id=1
+    )
+    task.insert()
 
 
 class CRUD():
@@ -108,7 +140,7 @@ TaskState
 class TaskState(db.Model, CRUD):
     __Table__name = "TaskState"
     id = db.Column(db.Integer, primary_key=True)
-    is_completed = db.Column(db.Boolean)
+    is_completed = db.Column(db.Boolean)  # TODO: add defaults
     is_delegated = db.Column(db.Boolean)
     do_immediately = db.Column(db.Boolean)
     is_due = db.Column(db.Boolean)

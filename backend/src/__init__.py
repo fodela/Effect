@@ -6,14 +6,15 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 
-# import Blueprints
+# Blueprints imports
 from .auth import auth
 from .endpoints.tasks import task
 
 
+from src import error_handlers
+
 load_dotenv()
 
-# from .error_handlers import *
 
 # app = Flask(__name__)
 """
@@ -36,6 +37,8 @@ def create_app(test_config=None):
 
     models.setup_db(app)
 
+    # models.db_drop_and_create_all()
+
     CORS(app, resources={r"api/*": {"origin": "*"}})
 
     @app.after_request
@@ -55,5 +58,12 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth)
     app.register_blueprint(task)
+    app.register_error_handler(400, error_handlers.bad_request)
+    app.register_error_handler(401, error_handlers.unauthorized)
+    app.register_error_handler(403, error_handlers.forbidden)
+    app.register_error_handler(404, error_handlers.not_found)
+    app.register_error_handler(409, error_handlers.conflict)
+    app.register_error_handler(422, error_handlers.unprocessable)
+    app.register_error_handler(500, error_handlers.server_error)
 
     return app

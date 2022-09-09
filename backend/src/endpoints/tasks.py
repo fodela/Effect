@@ -8,14 +8,29 @@ from ..database import models
 
 task = Blueprint("task", __name__, url_prefix="/api/v1")
 
+
 # [] GET /tasks
+@task.get("/tasks")
+# @jwt_required()
+def get_tasks():
+    # user_id: int = get_jwt_identity()
+    # tasks_query = models.Task.filter_by(user_id=user_id)
+    # tasks = [task.format for task in tasks_query]
+
+    return jsonify(
+        {
+            "success": True,
+            "code": 200,
+            # "tasks": tasks
+        }
+    )
 
 # [x] POST /tasks
 
 
 @task.post("/tasks")
 @jwt_required()
-def get_tasks() -> Dict[str, str]:
+def post_tasks() -> Dict[str, str]:
     print("FRIED")
     # get user_id
     user_id: int = get_jwt_identity()
@@ -28,7 +43,7 @@ def get_tasks() -> Dict[str, str]:
     deadline: str = request.json.get("deadline", None)
 
     # check validity of the request
-    if not (description or user_id or task_state_id):
+    if not description or not user_id:
         abort(400)
 
     task = models.Task(user_id=user_id,
