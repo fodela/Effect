@@ -86,7 +86,7 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["user"]["email"], self.new_user["email"])
         self.assertEqual(data["user"]["username"], self.new_user["username"])
 
-    # [] test_auth_register
+    # [] test_username_is_too_short
     def test_400_auth_register_username_is_less_than_3_characters(self):
         res = self.client().post("api/v1/auth/register", json={
             "username": "us",
@@ -99,6 +99,19 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["error"], 400)
         self.assertEqual(
             data["message"], "bad request: username is too short. username must be 3 characters or more")
+
+    def test_400_auth_register_password_is_less_than_8_characters(self):
+        res = self.client().post("api/v1/auth/register", json={
+            "username": "user1",
+            "email": "user1email@email.com",
+            "password": "passwor"
+        })
+        data = json.loads(res.data)
+        print(data["success"])
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 400)
+        self.assertEqual(
+            data["message"], "bad request: password is too short. Password must be at least 8 characters")
 
     # # [] test_auth_login
     # def test_auth_login(self):
