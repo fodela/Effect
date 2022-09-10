@@ -42,7 +42,7 @@ class EffectTestCase(unittest.TestCase):
             db.init_app(self.app)
             models.db_drop_and_create_all()
             test_user = models.User(
-                username="us",
+                username="user",
                 password="testpassword",
                 email="useremail@gmail.com"
             )
@@ -86,15 +86,14 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["user"]["email"], self.new_user["email"])
         self.assertEqual(data["user"]["username"], self.new_user["username"])
 
-    # [] test_username_is_too_short
+    # [x] test_register_errors
     def test_400_auth_register_username_is_less_than_3_characters(self):
         res = self.client().post("api/v1/auth/register", json={
             "username": "us",
-            "email": "useremail@email.com",
+            "email": "usershortemail@email.com",
             "password": "testpassword"
         })
         data = json.loads(res.data)
-        print(data["success"])
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
         self.assertEqual(
@@ -113,9 +112,19 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "bad request: password is too short. Password must be at least 8 characters")
 
-    # # [] test_auth_login
-    # def test_auth_login(self):
-    #     pass
+    def test_400_auth_register_username_must_alphanumeric(self):
+        res = self.client().post("api/v1/auth/register", json={
+            "username": "#user2",
+            "email": "user2email@email.com",
+            "password": "password"
+        })
+        data = json.loads(res.data)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 400)
+        self.assertEqual(
+            data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
+
+    # [] test login errors
 
     # # [] test_get_tasks
 

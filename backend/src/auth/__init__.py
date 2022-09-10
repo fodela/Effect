@@ -28,10 +28,11 @@ def register():
     if len(username) <= 3:
         abort(400, "username is too short. username must be 3 characters or more")
 
-    # # username must be alphanumeric
-    # if not username.isalnum() or " " in username:
-    #     abort(400, "username must contain alphabet and numbers only and must not contain spaces")
+    # username must be alphanumeric
+    if not username.isalnum() or " " in username:
+        abort(400, "username must contain alphabet and numbers only and must not contain spaces")
 
+    # [] check email validity
     # # check if username already exist
     # # validate email
     # # if not validator.email(email):
@@ -83,7 +84,7 @@ def login():
 
             return jsonify(
                 {
-                    # "success": True,
+                    "success": True,
                     # "code": 200,
                     # "refresh_token": refresh_token,
                     # "access_token": access_token,
