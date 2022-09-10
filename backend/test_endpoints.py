@@ -124,6 +124,18 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
 
+    def test_400_auth_register_username_must_not_contain_whitespaces(self):
+        res = self.client().post("api/v1/auth/register", json={
+            "username": "user 3",
+            "email": "user3email@email.com",
+            "password": "password"
+        })
+        data = json.loads(res.data)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 400)
+        self.assertEqual(
+            data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
+
     # [] test login errors
 
     # # [] test_get_tasks
