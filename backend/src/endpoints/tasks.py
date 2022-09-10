@@ -10,8 +10,8 @@ task = Blueprint("task", __name__, url_prefix="/api/v1")
 
 
 # [] GET /tasks
-@task.get("/tasks")
 # @jwt_required()
+@task.get("/tasks")
 def get_tasks():
     # user_id: int = get_jwt_identity()
     # tasks_query = models.Task.filter_by(user_id=user_id)

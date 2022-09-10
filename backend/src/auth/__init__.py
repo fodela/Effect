@@ -20,28 +20,28 @@ def register():
     email: str = request.json["email"]
     password: str = request.json["password"]
 
-    # check if password is > 8 xters
-    if len(password) < 8:
-        abort(400, "password is too short. Password must be at least 8 characters")
+    # check if password is < 8 xters
+    # if len(password) < 8:
+    #     abort(400, "password is too short. Password must be at least 8 characters")
 
     # username must be greater than 3 xters
     if len(username) <= 3:
         abort(400, "username is too short. username must be 3 characters or more")
 
-    # username must be alphanumeric
-    if not username.isalnum() or " " in username:
-        abort(400, "username must contain alphabet and numbers only and must not contain spaces")
+    # # username must be alphanumeric
+    # if not username.isalnum() or " " in username:
+    #     abort(400, "username must contain alphabet and numbers only and must not contain spaces")
 
-    # check if username already exist
-    # validate email
-    # if not validator.email(email):
-    #     abort(400)
-    if User.query.filter_by(username=username).first() is not None:
-        abort(409, "username already exist. Chose a different username")
+    # # check if username already exist
+    # # validate email
+    # # if not validator.email(email):
+    # #     abort(400)
+    # if User.query.filter_by(username=username).first() is not None:
+    #     abort(409, "username already exist. Chose a different username")
 
-    # check if email already exist
-    if User.query.filter_by(email=email).first() is not None:
-        abort(409, "email already exist.")
+    # # check if email already exist
+    # if User.query.filter_by(email=email).first() is not None:
+    #     abort(409, "email already exist.")
 
     # hash the password
     pwd_hash = generate_password_hash(password)
@@ -61,7 +61,7 @@ def register():
             }
         })
     except Exception as e:
-        abort(e.code)
+        abort(500)
 
 
 # [x]: login
@@ -83,13 +83,12 @@ def login():
 
             return jsonify(
                 {
-                    "success": True,
-                    "code": 200,
-                    "refresh_token": refresh_token,
-                    "access_token": access_token,
-                    "username": user.username,
-                    "email": user.email,
-
+                    # "success": True,
+                    # "code": 200,
+                    # "refresh_token": refresh_token,
+                    # "access_token": access_token,
+                    # "username": user.username,
+                    # "email": user.email,
                 }
             )
 

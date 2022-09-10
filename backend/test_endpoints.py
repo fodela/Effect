@@ -1,5 +1,6 @@
 
 import os
+from typing import Any
 import unittest
 import json
 
@@ -29,7 +30,9 @@ class EffectTestCase(unittest.TestCase):
         self.client = self.app.test_client
         self.database_name = "effect_test_db"
 
-        self.database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5432/{self.database_name}"
+        self.database_path = (f"postgresql://{DATABASE_USERNAME}:"
+                              f"{DATABASE_PASSWORD}@localhost:5432/"
+                              f"{self.database_name}")
 
         models.setup_db(self.app, self.database_path)
 
@@ -38,6 +41,12 @@ class EffectTestCase(unittest.TestCase):
             db = SQLAlchemy()
             db.init_app(self.app)
             models.db_drop_and_create_all()
+            test_user = models.User(
+                username="us",
+                password="testpassword",
+                email="useremail@gmail.com"
+            )
+            test_user.insert()
 
         self.new_user = {
             "username": "Laura",
@@ -53,6 +62,15 @@ class EffectTestCase(unittest.TestCase):
             "name": "academics"
         }
 
+    def check_data_is_valid(
+        self,
+        data,
+        success: bool,
+        code: int,
+    ):
+        self.assertEqual(data["success"], success)
+        self.assertEqual(data["code"], code)
+
     def tearDown(self):
         """Executed after reach test
         """
@@ -62,30 +80,43 @@ class EffectTestCase(unittest.TestCase):
         res = self.client().post("api/v1/auth/register", json=self.new_user)
         data = json.loads(res.data)
 
-        self.assertEqual(data["success"], True)
-        self.assertEqual(res.status_code, 200)
+        self.check_data_is_valid(data=data, success=True, code=200)
         self.assertTrue(data["message"])
         self.assertTrue(data["user"])
         self.assertEqual(data["user"]["email"], self.new_user["email"])
         self.assertEqual(data["user"]["username"], self.new_user["username"])
 
+    # [] test_auth_register
+    def test_400_auth_register_username_is_less_than_3_characters(self):
+        res = self.client().post("api/v1/auth/register", json={
+            "username": "us",
+            "email": "useremail@email.com",
+            "password": "testpassword"
+        })
+        data = json.loads(res.data)
+        print(data["success"])
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 400)
+        self.assertEqual(
+            data["message"], "bad request: username is too short. username must be 3 characters or more")
+
     # # [] test_auth_login
     # def test_auth_login(self):
     #     pass
 
-    # # [x] test_get_tasks
+    # # [] test_get_tasks
 
-    def test_get_tasks(self):
-        #  make api call
-        res = self.client().get("api/v1/tasks")
+    # def test_get_tasks(self):
+    #     #  make api call
+    #     res = self.client().get("api/v1/tasks")
 
-        # store the data
-        data = json.loads(res.data)
-    #     # check success is True
-        self.assertEqual(data["success"], True)
+    #     # store the data
+    #     data = json.loads(res.data)
+    # #     # check success is True
+    #     self.assertEqual(data["success"], True)
 
-    #     # check status code
-        self.assertEqual(data["code"], 200)
+    # #     # check status code
+    #     self.assertEqual(data["code"], 200)
     #     print("worked")
     # #     # Ensure that there is a list of tasks
     #     self.assertTrue(len(data["tasks"]))
