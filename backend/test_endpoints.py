@@ -37,14 +37,7 @@ class EffectTestCase(unittest.TestCase):
         with self.app.app_context():
             db = SQLAlchemy()
             db.init_app(self.app)
-            # db.drop_all()
-            # db.create_all()
-            # db.session.commit()
-            # db.create_all()
-            # delete, create all tables and testcases
-            # db_drop_and_create_all(db)
-            print("sd", db.create_all())
-            print("#############dropped")
+            models.db_drop_and_create_all()
 
         self.new_user = {
             "username": "Laura",
@@ -64,22 +57,24 @@ class EffectTestCase(unittest.TestCase):
         """Executed after reach test
         """
 
-    # # [] test_auth_register
+    # [x] test_auth_register
     def test_auth_register(self):
         res = self.client().post("api/v1/auth/register", json=self.new_user)
         data = json.loads(res.data)
-        print("$$$$$$$$$ ", data)
 
         self.assertEqual(data["success"], True)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data["message"])
         self.assertTrue(data["user"])
+        self.assertEqual(data["user"]["email"], self.new_user["email"])
+        self.assertEqual(data["user"]["username"], self.new_user["username"])
 
     # # [] test_auth_login
     # def test_auth_login(self):
     #     pass
 
     # # [x] test_get_tasks
+
     def test_get_tasks(self):
         #  make api call
         res = self.client().get("api/v1/tasks")
