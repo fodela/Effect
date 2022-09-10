@@ -56,7 +56,8 @@ def register():
             "code": 200,
             "message": "User created",
             "user": {
-                "username": username, "email": email
+                "username": username,
+                "email": email
             }
         })
     except Exception as e:

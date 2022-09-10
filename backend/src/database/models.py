@@ -39,7 +39,6 @@ def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
-    db_drop_and_create_all()
 
 
 def db_drop_and_create_all() -> None:
@@ -53,25 +52,19 @@ def db_drop_and_create_all() -> None:
 
     # add one test case to help with testing
     # user
-    user = User(
-        username="testuser",
-        password="password",
-        email="testuser@email.com"
-    )
+    # user = User(
+    #     username="testuser",
+    #     password="password",
+    #     email="testuser@email.com"
+    # )
     # user.insert()
-    db.session.add(User(
-        username="newOne",
-        password="password",
-        email="newOne@email.com"
-    ))
-    # db.session.commit()
 
-    # task
-    task = Task(
-        description="test our endpoints",
-        user_id=1
-    )
-    task.insert()
+    # # task
+    # task = Task(
+    #     description="test our endpoints",
+    #     user_id=1
+    # )
+    # task.insert()
 
 
 class CRUD():
