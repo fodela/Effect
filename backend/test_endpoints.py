@@ -155,6 +155,17 @@ class EffectTestCase(unittest.TestCase):
         self.assertTrue(data["access_token"])
 
     # [] test login errors
+    def test_401_auth_login_invalid_email(self):
+        res = self.client().post("api/v1/auth/login", json={
+            "password": "passwordtest",
+            "email": "invalid@email.com"
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 401)
+        self.assertEqual(
+            data["message"], "unauthorized: invalid email or password")
 
     # # [] test_get_tasks
 
