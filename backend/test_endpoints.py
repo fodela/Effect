@@ -50,6 +50,12 @@ class EffectTestCase(unittest.TestCase):
             )
             test_user.insert()
 
+        self.valid_user = {
+            "email": "useremail@email.com",
+            "username": "user",
+            "password": "passwordtest"
+        }
+
         self.new_user = {
             "username": "Laura",
             "email": "laura@email.com",
@@ -138,12 +144,9 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
 
-    # # [] test_auth_login
+    # # [x] test_auth_login
     def test_auth_login(self):
-        res = self.client().post("/api/v1/auth/login", json={
-            "password": "passwordtest",
-            "email": "useremail@email.com"
-        })
+        res = self.client().post("/api/v1/auth/login", json=self.valid_user)
         data = json.loads(res.data)
         print(data)
 
@@ -154,7 +157,7 @@ class EffectTestCase(unittest.TestCase):
         self.assertTrue(data["refresh_token"])
         self.assertTrue(data["access_token"])
 
-    # [] test login errors
+    # [x] test login errors
     def test_401_auth_login_invalid_email(self):
         res = self.client().post("api/v1/auth/login", json={
             "password": "passwordtest",
