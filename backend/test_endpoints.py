@@ -10,6 +10,8 @@ from src import create_app
 from dotenv import load_dotenv
 
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 # Makes available all environment variables from the .env file
 load_dotenv()
@@ -43,8 +45,8 @@ class EffectTestCase(unittest.TestCase):
             models.db_drop_and_create_all()
             test_user = models.User(
                 username="user",
-                password="testpassword",
-                email="useremail@gmail.com"
+                password=generate_password_hash("passwordtest"),
+                email="useremail@email.com"
             )
             test_user.insert()
 
@@ -136,6 +138,22 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
 
+    # # [] test_auth_login
+    def test_auth_login(self):
+        res = self.client().post("/api/v1/auth/login", json={
+            "password": "passwordtest",
+            "email": "useremail@email.com"
+        })
+        data = json.loads(res.data)
+        print(data)
+
+        self.assertEqual(data["success"], True)
+        self.assertEqual(data["code"], 200)
+        self.assertTrue(data["username"])
+        self.assertTrue(data["email"])
+        self.assertTrue(data["refresh_token"])
+        self.assertTrue(data["access_token"])
+
     # [] test login errors
 
     # # [] test_get_tasks
@@ -160,14 +178,14 @@ class EffectTestCase(unittest.TestCase):
     # def test_404_get_tasks(self):
     #     pass
 
-    # # [] test_post_tasks
-    # def test_post_tasks(self):
-    #     res = self.client().post("tasks", json=self.new_task)
-    #     data = json.loads(res.data)
+    # # # [] test_post_tasks
+    # # def test_post_tasks(self):
+    # #     res = self.client().post("tasks", json=self.new_task)
+    # #     data = json.loads(res.data)
 
-    #     self.assertEqual(data["success"], True)
-    #     self.assertEqual(data["code"], 200)
-    #     self.assertEqual(data["message"], "task created")
+    # #     self.assertEqual(data["success"], True)
+    # #     self.assertEqual(data["code"], 200)
+    # #     self.assertEqual(data["message"], "task created")
 
     # # [] test_patch_tasks
     # def test_patch_tasks(self):

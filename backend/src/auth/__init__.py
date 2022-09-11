@@ -85,15 +85,17 @@ def login():
             return jsonify(
                 {
                     "success": True,
-                    # "code": 200,
-                    # "refresh_token": refresh_token,
-                    # "access_token": access_token,
-                    # "username": user.username,
-                    # "email": user.email,
+                    "code": 200,
+                    "refresh_token": refresh_token,
+                    "access_token": access_token,
+                    "username": user.username,
+                    "email": user.email,
                 }
             )
-
-    abort(401)
+        else:
+            abort(401, "invalid password")
+    else:
+        abort(401, "invalid user")
 
 
 @auth.get("/me")
