@@ -167,6 +167,18 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "unauthorized: invalid email or password")
 
+    def test_401_auth_login_invalid_password(self):
+        res = self.client().post("api/v1/auth/login", json={
+            "password": "passwordtes",
+            "email": "useremail@email.com"
+        })
+        data = json.loads(res.data)
+
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 401)
+        self.assertEqual(
+            data["message"], "unauthorized: invalid email or password")
+
     # # [] test_get_tasks
 
     # def test_get_tasks(self):
