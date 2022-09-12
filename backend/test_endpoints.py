@@ -226,14 +226,8 @@ class EffectTestCase(unittest.TestCase):
         # Ensure that there is a list of tasks
         self.assertIsInstance(data["tasks"], list)
 
-        # TODO check task is returned an
-        # self.assertTrue(len(data["tasks"]))
-
-    # # [] test_404_get_tasks
-    # def test_404_get_tasks(self):
-    #     pass
-
     # # # [] test_post_tasks
+
     def test_post_tasks(self):
         # login using the valid test user to get access_token
         def get_access_token():
@@ -269,6 +263,31 @@ class EffectTestCase(unittest.TestCase):
 
         self.assertEqual(data["success"], True)
         self.assertEqual(data["code"], 200)
+
+    def test_400_post_tasks_request_has_no_description(self):
+        # login using the valid test user to get access_token
+        def get_access_token():
+            log = self.client().post("api/v1/auth/login", json=self.valid_user)
+
+            self.access_token: str = json.loads(log.data)["access_token"]
+
+        get_access_token()
+
+        #  make api call
+        res = self.client().post(
+            "api/v1/tasks",
+            headers=dict(
+                Authorization=f"Bearer {self.access_token}"
+            ),
+            json={"description": None,
+                  "user_id": 1
+                  }
+        )
+        data = json.loads(res.data)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 400)
+        self.assertEqual(
+            data["message"], "bad request: You must provide a description of the task")
 
     # # [] test_patch_tasks
     # def test_patch_tasks(self):
