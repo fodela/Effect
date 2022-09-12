@@ -92,10 +92,8 @@ def login():
                     "email": user.email,
                 }
             )
-        else:
-            abort(401, "invalid password")
-    else:
-        abort(401, "invalid user")
+
+    abort(401, "invalid email or password")
 
 
 @auth.get("/me")

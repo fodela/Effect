@@ -10,18 +10,23 @@ task = Blueprint("task", __name__, url_prefix="/api/v1")
 
 
 # [] GET /tasks
-# @jwt_required()
 @task.get("/tasks")
+@jwt_required()
 def get_tasks():
-    # user_id: int = get_jwt_identity()
-    # tasks_query = models.Task.filter_by(user_id=user_id)
-    # tasks = [task.format for task in tasks_query]
+    user_id: int = get_jwt_identity()
+    print("user_id", user_id)
+    tasks_query = models.Task.query.filter_by(user_id=user_id).all()
+
+    if tasks_query:
+        tasks = [task.format() for task in tasks_query]
+    else:
+        tasks = []
 
     return jsonify(
         {
             "success": True,
             "code": 200,
-            # "tasks": tasks
+            "tasks": tasks
         }
     )
 
@@ -31,7 +36,7 @@ def get_tasks():
 @task.post("/tasks")
 @jwt_required()
 def post_tasks() -> Dict[str, str]:
-    print("FRIED")
+
     # get user_id
     user_id: int = get_jwt_identity()
 
@@ -44,7 +49,7 @@ def post_tasks() -> Dict[str, str]:
 
     # check validity of the request
     if not description or not user_id:
-        abort(400)
+        abort(400, "You must provide a description of the task")
 
     task = models.Task(user_id=user_id,
                        description=description,
@@ -59,18 +64,16 @@ def post_tasks() -> Dict[str, str]:
     try:
         task.insert()
 
+        return jsonify(
+            {
+                "success": True,
+                "code": 200,
+                "message": "task created"
+            }
+        ), 200
     except Exception as e:
         abort(500)
-    finally:
-        print("I'm done.")
 
-    return jsonify(
-        {
-            "success": True,
-            "code": 200,
-            "message": "task created"
-        }
-    ), 200
 
 # [] PATCH /tasks
 

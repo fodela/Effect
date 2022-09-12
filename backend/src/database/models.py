@@ -97,12 +97,12 @@ class Task(db.Model, CRUD):
     duration = db.Column(db.Integer)
     priority = db.Column(db.Integer)
     user_id = db.ForeignKey("User.id", nullable=False)
-    task_state_id = db.ForeignKey("TaskState.id", nullable=False)
+    task_state_id = db.ForeignKey("TaskState.id")  # TODO make nullable = False
     deadline = db.Column(db.DateTime)
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    category_id = db.ForeignKey("Category", nullable=False)
+    category_id = db.ForeignKey("Category")  # TODO make nullable = False
     # task_category = db.relationship(
     #     "TaskCategory", backref="task", lazy=True)
 
