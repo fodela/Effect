@@ -1,4 +1,5 @@
 
+from email.header import Header
 import os
 from typing import Any
 import unittest
@@ -43,12 +44,26 @@ class EffectTestCase(unittest.TestCase):
             db = SQLAlchemy()
             db.init_app(self.app)
             models.db_drop_and_create_all()
+            # Add user to test database
             test_user = models.User(
                 username="user",
                 password=generate_password_hash("passwordtest"),
                 email="useremail@email.com"
             )
             test_user.insert()
+            test_user2 = models.User(
+                username="user2",
+                password=generate_password_hash("passwordtest"),
+                email="user2email@email.com"
+            )
+            test_user2.insert()
+
+            # Add task to test database
+            test_task = models.Task(
+                description="Test task description",
+                user_id=1,
+            )
+            test_task.insert()
 
         self.valid_user = {
             "email": "useremail@email.com",
@@ -69,6 +84,8 @@ class EffectTestCase(unittest.TestCase):
         self.new_category = {
             "name": "academics"
         }
+
+        self.access_token = None
 
     def check_data_is_valid(
         self,
@@ -114,7 +131,7 @@ class EffectTestCase(unittest.TestCase):
             "password": "passwor"
         })
         data = json.loads(res.data)
-        print(data["success"])
+
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
         self.assertEqual(
@@ -148,7 +165,6 @@ class EffectTestCase(unittest.TestCase):
     def test_auth_login(self):
         res = self.client().post("/api/v1/auth/login", json=self.valid_user)
         data = json.loads(res.data)
-        print(data)
 
         self.assertEqual(data["success"], True)
         self.assertEqual(data["code"], 200)
@@ -182,23 +198,37 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "unauthorized: invalid email or password")
 
-    # # [] test_get_tasks
+    # [] test_get_tasks
 
-    # def test_get_tasks(self):
-    #     #  make api call
-    #     res = self.client().get("api/v1/tasks")
+    def test_get_tasks(self):
+        # login using the valid test user to get access_token
+        log = self.client().post("api/v1/auth/login", json=self.valid_user)
 
-    #     # store the data
-    #     data = json.loads(res.data)
-    # #     # check success is True
-    #     self.assertEqual(data["success"], True)
+        self.access_token: str = json.loads(log.data)["access_token"]
 
-    # #     # check status code
-    #     self.assertEqual(data["code"], 200)
-    #     print("worked")
-    # #     # Ensure that there is a list of tasks
-    #     self.assertTrue(len(data["tasks"]))
-    #     self.assertIsInstance(data["tasks"], list)
+        #  make api call
+        res = self.client().get(
+            "api/v1/tasks",
+            headers=dict(
+                Authorization=f"Bearer {self.access_token}"
+            )
+        )
+
+        # store the data
+        data = json.loads(res.data)
+        print(data)
+
+        # check success is True
+        self.assertEqual(data["success"], True)
+
+        # check status code
+        self.assertEqual(data["code"], 200)
+
+        # Ensure that there is a list of tasks
+        self.assertIsInstance(data["tasks"], list)
+
+        # TODO check task is returned an
+        # self.assertTrue(len(data["tasks"]))
 
     # # [] test_404_get_tasks
     # def test_404_get_tasks(self):
@@ -240,5 +270,3 @@ class EffectTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-    print(__name__)
