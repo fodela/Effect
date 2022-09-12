@@ -214,9 +214,8 @@ class EffectTestCase(unittest.TestCase):
             )
         )
 
-        # store the data
+        # get data from response
         data = json.loads(res.data)
-        print(data)
 
         # check success is True
         self.assertEqual(data["success"], True)
@@ -235,13 +234,41 @@ class EffectTestCase(unittest.TestCase):
     #     pass
 
     # # # [] test_post_tasks
-    # # def test_post_tasks(self):
-    # #     res = self.client().post("tasks", json=self.new_task)
-    # #     data = json.loads(res.data)
+    def test_post_tasks(self):
+        # login using the valid test user to get access_token
+        def get_access_token():
+            log = self.client().post("api/v1/auth/login", json=self.valid_user)
 
-    # #     self.assertEqual(data["success"], True)
-    # #     self.assertEqual(data["code"], 200)
-    # #     self.assertEqual(data["message"], "task created")
+            self.access_token: str = json.loads(log.data)["access_token"]
+
+        get_access_token()
+
+        #  make api call
+        res = self.client().post(
+            "api/v1/tasks",
+            headers=dict(
+                Authorization=f"Bearer {self.access_token}"
+            ),
+            json={"description": "finish backend of effect",
+                  "user_id": 1
+                  }
+        )
+
+        # get data from response
+        data = json.loads(res.data)
+        print(data)
+
+        # check success is True
+        self.assertEqual(data["success"], True)
+
+        # check status code
+        self.assertEqual(data["code"], 200)
+
+        # Ensure that there is a list of tasks
+        self.assertEqual(data["message"], "task created")
+
+        self.assertEqual(data["success"], True)
+        self.assertEqual(data["code"], 200)
 
     # # [] test_patch_tasks
     # def test_patch_tasks(self):
