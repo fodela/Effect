@@ -325,6 +325,24 @@ class EffectTestCase(unittest.TestCase):
             data["message"], "bad request: You must provide a description of the task")
 
     # [] test_patch_tasks
+    def test_update_tasks(self):
+        # login using the valid test user to get access_token
+        access_token = self.get_access_token()
+
+        data = self.make_api_call(method_type="PATCH", address="/api/v1/tasks/1", access_token=access_token, body={
+            "description ": "I updated this task"
+        })
+        print(data)
+        # check success is True
+        self.assertEqual(data["success"], True)
+
+        # check status code
+        self.assertEqual(data["code"], 200)
+
+        # Ensure that there is a list of tasks
+        self.assertEqual(data["message"], "task updated")
+
+        self.assertEqual(data["success"], True)
 
     # # [] test_delete_tasks
     # def test_delete_tasks(self):
