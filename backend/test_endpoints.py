@@ -1,7 +1,7 @@
 
 from email.header import Header
 import os
-from typing import Any
+from typing import Any, Dict, List
 import unittest
 import json
 
@@ -65,6 +65,7 @@ class EffectTestCase(unittest.TestCase):
             )
             test_task.insert()
 
+        # data for testing purposes and keep DRY principle
         self.valid_user = {
             "email": "useremail@email.com",
             "username": "user",
@@ -85,7 +86,7 @@ class EffectTestCase(unittest.TestCase):
             "name": "academics"
         }
 
-        self.access_token = None
+    # FUNCTIONS to keep DRY principle
 
     def check_data_is_valid(
         self,
@@ -96,14 +97,60 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["success"], success)
         self.assertEqual(data["code"], code)
 
+    def get_access_token(self) -> str:
+        log = self.client().post("api/v1/auth/login", json=self.valid_user)
+
+        access_token: str = json.loads(log.data)["access_token"]
+        return access_token
+
+    def make_api_call(self, address: str, access_token: str = None, body: Dict[str, str] = None, method_type: str = "GET") -> Dict[str, str]:
+        if method_type == "GET":
+            response = self.client().get(
+                f"{address}",
+                headers=dict(
+                    Authorization=f"Bearer {access_token}"
+                )
+            )
+        elif method_type == "POST":
+            response = self.client().post(
+                f"{address}",
+                headers=dict(
+                    Authorization=f"Bearer {access_token}"
+                ),
+                json=body
+            )
+        elif method_type == "PATCH":
+            response = self.client().patch(
+                f"{address}",
+                headers=dict(
+                    Authorization=f"Bearer {access_token}"
+                ),
+                json=body
+            )
+        elif method_type == "DELETE":
+            response = self.client().patch(
+                f"{address}",
+                headers=dict(
+                    Authorization=f"Bearer {access_token}"
+                )
+            )
+        else:
+            raise KeyError(
+                f"{method_type} is not a valid method. Method must be 'GET', 'POST', 'PATCH' or 'DELETE'")
+        data = json.loads(response.data)
+        return data
+
     def tearDown(self):
         """Executed after reach test
         """
 
+    # TESTS
+
     # [x] test_auth_register
     def test_auth_register(self):
-        res = self.client().post("api/v1/auth/register", json=self.new_user)
-        data = json.loads(res.data)
+        # res = self.client().post("api/v1/auth/register", json=self.new_user)
+        data = self.make_api_call(method_type="POST",
+                                  address="api/v1/auth/register", body=self.new_user)
 
         self.check_data_is_valid(data=data, success=True, code=200)
         self.assertTrue(data["message"])
@@ -113,24 +160,33 @@ class EffectTestCase(unittest.TestCase):
 
     # [x] test_register_errors
     def test_400_auth_register_username_is_less_than_3_characters(self):
-        res = self.client().post("api/v1/auth/register", json={
+        # res = self.client().post("api/v1/auth/register", json={
+        #     "username": "us",
+        #     "email": "usershortemail@email.com",
+        #     "password": "testpassword"
+        # })
+
+        data = self.make_api_call(method_type="POST", address="api/v1/auth/register", body={
             "username": "us",
             "email": "usershortemail@email.com",
             "password": "testpassword"
         })
-        data = json.loads(res.data)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
         self.assertEqual(
             data["message"], "bad request: username is too short. username must be 3 characters or more")
 
     def test_400_auth_register_password_is_less_than_8_characters(self):
-        res = self.client().post("api/v1/auth/register", json={
+        # res = self.client().post("api/v1/auth/register", json={
+        #     "username": "user1",
+        #     "email": "user1email@email.com",
+        #     "password": "passwor"
+        # })
+        data = self.make_api_call(method_type="POST", address="api/v1/auth/register", body={
             "username": "user1",
             "email": "user1email@email.com",
             "password": "passwor"
         })
-        data = json.loads(res.data)
 
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
@@ -138,24 +194,33 @@ class EffectTestCase(unittest.TestCase):
             data["message"], "bad request: password is too short. Password must be at least 8 characters")
 
     def test_400_auth_register_username_must_alphanumeric(self):
-        res = self.client().post("api/v1/auth/register", json={
+        # res = self.client().post("api/v1/auth/register", json={
+        #     "username": "#user2",
+        #     "email": "user2email@email.com",
+        #     "password": "password"
+        # })
+        data = self.make_api_call(method_type="POST", address="api/v1/auth/register", body={
             "username": "#user2",
             "email": "user2email@email.com",
             "password": "password"
         })
-        data = json.loads(res.data)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
         self.assertEqual(
             data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
 
     def test_400_auth_register_username_must_not_contain_whitespaces(self):
-        res = self.client().post("api/v1/auth/register", json={
+        # res = self.client().post("api/v1/auth/register", json={
+        #     "username": "user 3",
+        #     "email": "user3email@email.com",
+        #     "password": "password"
+        # })
+
+        data = self.make_api_call(method_type="POST", address="api/v1/auth/register", body={
             "username": "user 3",
             "email": "user3email@email.com",
             "password": "password"
         })
-        data = json.loads(res.data)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
         self.assertEqual(
@@ -163,8 +228,9 @@ class EffectTestCase(unittest.TestCase):
 
     # # [x] test_auth_login
     def test_auth_login(self):
-        res = self.client().post("/api/v1/auth/login", json=self.valid_user)
-        data = json.loads(res.data)
+        # res = self.client().post("/api/v1/auth/login", json=self.valid_user)
+        data = self.make_api_call(
+            method_type="POST", address="/api/v1/auth/login", body=self.valid_user)
 
         self.assertEqual(data["success"], True)
         self.assertEqual(data["code"], 200)
@@ -175,11 +241,14 @@ class EffectTestCase(unittest.TestCase):
 
     # [x] test login errors
     def test_401_auth_login_invalid_email(self):
-        res = self.client().post("api/v1/auth/login", json={
+        # res = self.client().post("api/v1/auth/login", json={
+        #     "password": "passwordtest",
+        #     "email": "invalid@email.com"
+        # })
+        data = self.make_api_call(method_type="POST", address="/api/v1/auth/login", body={
             "password": "passwordtest",
             "email": "invalid@email.com"
         })
-        data = json.loads(res.data)
 
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 401)
@@ -187,11 +256,14 @@ class EffectTestCase(unittest.TestCase):
             data["message"], "unauthorized: invalid email or password")
 
     def test_401_auth_login_invalid_password(self):
-        res = self.client().post("api/v1/auth/login", json={
+        # res = self.client().post("api/v1/auth/login", json={
+        #     "password": "passwordtes",
+        #     "email": "useremail@email.com"
+        # })
+        data = self.make_api_call(method_type="POST", address="/api/v1/auth/login", body={
             "password": "passwordtes",
             "email": "useremail@email.com"
         })
-        data = json.loads(res.data)
 
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 401)
@@ -201,21 +273,10 @@ class EffectTestCase(unittest.TestCase):
     # [] test_get_tasks
 
     def test_get_tasks(self):
-        # login using the valid test user to get access_token
-        log = self.client().post("api/v1/auth/login", json=self.valid_user)
-
-        self.access_token: str = json.loads(log.data)["access_token"]
-
-        #  make api call
-        res = self.client().get(
-            "api/v1/tasks",
-            headers=dict(
-                Authorization=f"Bearer {self.access_token}"
-            )
-        )
-
+        access_token = self.get_access_token()
         # get data from response
-        data = json.loads(res.data)
+        data = self.make_api_call(
+            address="api/v1/tasks", access_token=access_token)
 
         # check success is True
         self.assertEqual(data["success"], True)
@@ -230,27 +291,12 @@ class EffectTestCase(unittest.TestCase):
 
     def test_post_tasks(self):
         # login using the valid test user to get access_token
-        def get_access_token():
-            log = self.client().post("api/v1/auth/login", json=self.valid_user)
+        access_token = self.get_access_token()
 
-            self.access_token: str = json.loads(log.data)["access_token"]
-
-        get_access_token()
-
-        #  make api call
-        res = self.client().post(
-            "api/v1/tasks",
-            headers=dict(
-                Authorization=f"Bearer {self.access_token}"
-            ),
-            json={"description": "finish backend of effect",
-                  "user_id": 1
-                  }
-        )
-
-        # get data from response
-        data = json.loads(res.data)
-        print(data)
+        data = self.make_api_call(method_type="POST",
+                                  address="api/v1/tasks", access_token=access_token, body={"description": "finish backend of effect",
+                                                                                           "user_id": 1
+                                                                                           })
 
         # check success is True
         self.assertEqual(data["success"], True)
@@ -266,32 +312,19 @@ class EffectTestCase(unittest.TestCase):
 
     def test_400_post_tasks_request_has_no_description(self):
         # login using the valid test user to get access_token
-        def get_access_token():
-            log = self.client().post("api/v1/auth/login", json=self.valid_user)
 
-            self.access_token: str = json.loads(log.data)["access_token"]
-
-        get_access_token()
+        access_token = self.get_access_token()
 
         #  make api call
-        res = self.client().post(
-            "api/v1/tasks",
-            headers=dict(
-                Authorization=f"Bearer {self.access_token}"
-            ),
-            json={"description": None,
-                  "user_id": 1
-                  }
-        )
-        data = json.loads(res.data)
+        data = self.make_api_call(method_type="POST",
+                                  address="api/v1/tasks", access_token=access_token, body={
+                                      "user_id": 1})
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
         self.assertEqual(
             data["message"], "bad request: You must provide a description of the task")
 
-    # # [] test_patch_tasks
-    # def test_patch_tasks(self):
-    #     pass
+    # [] test_patch_tasks
 
     # # [] test_delete_tasks
     # def test_delete_tasks(self):
