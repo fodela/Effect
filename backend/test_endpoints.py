@@ -330,7 +330,7 @@ class EffectTestCase(unittest.TestCase):
         access_token = self.get_access_token()
 
         data = self.make_api_call(method_type="PATCH", address="/api/v1/tasks/1", access_token=access_token, body={
-            "description ": "I updated this task"
+            "description": "I updated this task"
         })
         print(data)
         # check success is True
@@ -344,6 +344,18 @@ class EffectTestCase(unittest.TestCase):
 
         self.assertEqual(data["success"], True)
 
+    # def test_404_update_tasks_task_not_found(self):
+    #     access_token = self.get_access_token()
+    #     # login using the valid test user to get access_token
+    #     access_token = self.get_access_token()
+
+    #     data = self.make_api_call(method_type="PATCH", address="/api/v1/tasks/9999", access_token=access_token, body={
+    #         "description ": "I updated this task"
+    #     })
+    #     self.assertEqual(data["success"], False)
+    #     self.assertEqual(data["error"], 404)
+    #     self.assertEqual(
+    #         data["message"], "not found")
     # # [] test_delete_tasks
     # def test_delete_tasks(self):
     #     pass
