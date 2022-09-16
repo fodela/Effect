@@ -1,8 +1,10 @@
 import json
+import string
 
 from flask import Blueprint, request, abort, jsonify
 from typing import Dict
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from sqlalchemy import and_
 
 from ..database import models
 
@@ -15,10 +17,13 @@ task = Blueprint("task", __name__, url_prefix="/api/v1")
 def get_tasks():
     user_id: int = get_jwt_identity()
     print("user_id", user_id)
-    tasks_query = models.Task.query.filter_by(user_id=user_id).all()
+    tasks_query = models.Task.query.join(
+        models.User).filter(user_id == user_id).all()
 
+    # tasks_query = None
     if tasks_query:
         tasks = [task.format() for task in tasks_query]
+        tasks = tasks
     else:
         tasks = []
 
@@ -76,9 +81,38 @@ def post_tasks() -> Dict[str, str]:
 
 
 # [] PATCH /tasks
+@task.route("/tasks/<int:task_id>", methods=["PATCH"])
+@jwt_required()
+def update_tasks(task_id) -> Dict[str, str]:
+    print("FIRED")
+    user_id: int = get_jwt_identity()
 
+    # get task description from the request
+    new_description = request.json.get("description", None)
+    print(new_description, "$$$$$$$")
 
-# [] DELETE /tasks
+    if new_description:
+        # task_to_be_updated = models.Task.query.filter(
+        #     and_(id == task_id, user_id == user_id)).first()
+        task_to_be_updated = models.Task.query.filter(
+            and_(id == 1)).all()
 
+        print(task_to_be_updated, "@@@@@@@@@@@")
 
-# [] create a snippet for getting request details
+        if task_to_be_updated:
+            # task_to_be_updated.description = new_description
+            return jsonify(
+                {
+                    "success": True,
+                    "code": 200,
+                    "message": f"task updated {str(task_to_be_updated)}"
+                }
+            ), 200
+        else:
+            abort(404)
+
+    abort(400, "request must contain task description")
+
+    # [] DELETE /tasks
+
+    # [] create a snippet for getting request details
