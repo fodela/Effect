@@ -84,6 +84,36 @@ class CRUD():
 
 
 """
+User
+
+"""
+
+
+class User(db.Model, CRUD):
+    __Table__name = "User"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.Text(), nullable=False)
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=datetime.now())
+    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
+    tasks = db.relationship("Task", backref="user", lazy=True)
+
+    def format(self) -> Dict[str, str]:
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
+    def __repr__(self):
+        return f"<User | ID: {self.id} Username: {self.username}>"
+
+
+"""
 Task
 
 """
@@ -96,7 +126,11 @@ class Task(db.Model, CRUD):
     description = db.Column(db.String, nullable=False)
     duration = db.Column(db.Integer)
     priority = db.Column(db.Integer)
-    user_id = db.ForeignKey("User.id", nullable=False)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
     task_state_id = db.ForeignKey("TaskState.id")  # TODO make nullable = False
     deadline = db.Column(db.DateTime)
     created_at = db.Column(
@@ -106,14 +140,14 @@ class Task(db.Model, CRUD):
     # task_category = db.relationship(
     #     "TaskCategory", backref="task", lazy=True)
 
-    def format(self):
+    def format(self) -> Dict[str, str]:
         return {
             "id": self.id,
             "description": self.description,
             "duration": self.duration,
             "priority": self.priority,
             "user_id": self.user_id,
-            "task_state_id": self.task_state_id,
+            # "task_state_id": self.task_state_id,
             "deadline": self.deadline,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
@@ -149,35 +183,6 @@ class TaskState(db.Model, CRUD):
 
     def __repr__(self):
         return f"<TaskState | ID: {self.id} {'Completed' if self.is_completed else 'Not completed'} {'Delegated' if self.is_delegated else ''} {'Due' if self.is_due else ''}>"
-
-
-"""
-User
-
-"""
-
-
-class User(db.Model, CRUD):
-    __Table__name = "User"
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.Text(), nullable=False)
-    created_at = db.Column(
-        db.DateTime, nullable=False, default=datetime.now())
-    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-    def format(self) -> Dict:
-        return {
-            "id": self.id,
-            "username": self.username,
-            "email": self.email,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
-        }
-
-    def __repr__(self):
-        return f"<User | ID: {self.id} Username: {self.username}>"
 
 
 """
