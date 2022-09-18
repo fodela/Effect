@@ -287,6 +287,14 @@ class EffectTestCase(unittest.TestCase):
         # Ensure that there is a list of tasks
         self.assertIsInstance(data["tasks"], list)
 
+        self.assertEqual(data["task_state"], {
+            "id": 1,
+            "is_delegated": False,
+            "do_immediately": False,
+            "is_completed": False,
+            "is_due": False
+        })
+
     # # # [] test_post_tasks
 
     def test_post_tasks(self):
@@ -304,11 +312,7 @@ class EffectTestCase(unittest.TestCase):
         # check status code
         self.assertEqual(data["code"], 200)
 
-        # Ensure that there is a list of tasks
         self.assertEqual(data["message"], "task created")
-
-        self.assertEqual(data["success"], True)
-        self.assertEqual(data["code"], 200)
 
     def test_400_post_tasks_request_has_no_description(self):
         # login using the valid test user to get access_token
