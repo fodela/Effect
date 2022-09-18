@@ -128,7 +128,7 @@ class EffectTestCase(unittest.TestCase):
                 json=body
             )
         elif method_type == "DELETE":
-            response = self.client().patch(
+            response = self.client().delete(
                 f"{address}",
                 headers=dict(
                     Authorization=f"Bearer {access_token}"
@@ -332,7 +332,6 @@ class EffectTestCase(unittest.TestCase):
         data = self.make_api_call(method_type="PATCH", address="/api/v1/tasks/1", access_token=access_token, body={
             "description": "I updated this task"
         })
-        print(data)
         # check success is True
         self.assertEqual(data["success"], True)
 
@@ -344,18 +343,18 @@ class EffectTestCase(unittest.TestCase):
 
         self.assertEqual(data["success"], True)
 
-    # def test_404_update_tasks_task_not_found(self):
-    #     access_token = self.get_access_token()
-    #     # login using the valid test user to get access_token
-    #     access_token = self.get_access_token()
+    def test_404_update_tasks_task_not_found(self):
+        access_token = self.get_access_token()
+        # login using the valid test user to get access_token
+        access_token = self.get_access_token()
 
-    #     data = self.make_api_call(method_type="PATCH", address="/api/v1/tasks/1", access_token=access_token, body={
-    #         "description ": "I updated this task"
-    #     })
-    #     self.assertEqual(data["success"], False)
-    #     self.assertEqual(data["error"], 404)
-    #     self.assertEqual(
-    #         data["message"], "not found")
+        data = self.make_api_call(method_type="PATCH", address="/api/v1/tasks/99999", access_token=access_token, body={
+            "description": "I updated this task"
+        })
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["error"], 404)
+        self.assertEqual(
+            data["message"], "not found: no such task exist for this user")
 
     def test_400_update_tasks_request_has_no_description(self):
         # login using the valid test user to get access_token
@@ -370,9 +369,22 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["error"], 400)
         self.assertEqual(
             data["message"], "bad request: request must contain task description")
-    # # [] test_delete_tasks
-    # def test_delete_tasks(self):
-    #     pass
+
+    # [x] test_delete_tasks
+    def test_delete_task(self):
+        # login using the valid test user to get access_token
+        access_token = self.get_access_token()
+
+        data = self.make_api_call(
+            method_type="DELETE", address="/api/v1/tasks/1", access_token=access_token)
+        # check success is True
+        self.assertEqual(data["success"], True)
+
+        # check status code
+        self.assertEqual(data["code"], 200)
+
+        # Ensure that there is a list of tasks
+        self.assertEqual(data["message"], "task deleted")
 
     # # [] test_get_categories
     # def test_get_categories(self):
