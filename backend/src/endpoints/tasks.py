@@ -16,7 +16,6 @@ task = Blueprint("task", __name__, url_prefix="/api/v1")
 @jwt_required()
 def get_tasks():
     user_id: int = get_jwt_identity()
-    print("user_id", user_id)
     tasks_query = models.Task.query.join(
         models.User).filter(user_id == user_id).all()
 
@@ -40,7 +39,7 @@ def get_tasks():
 
 @task.post("/tasks")
 @jwt_required()
-def post_tasks() -> Dict[str, str]:
+def post_task() -> Dict[str, str]:
 
     # get user_id
     user_id: int = get_jwt_identity()
@@ -80,39 +79,45 @@ def post_tasks() -> Dict[str, str]:
         abort(500)
 
 
-# [] PATCH /tasks
+# [x] PATCH /tasks
 @task.route("/tasks/<int:task_id>", methods=["PATCH"])
 @jwt_required()
-def update_tasks(task_id) -> Dict[str, str]:
-    print("FIRED")
+def update_task(task_id) -> Dict[str, str]:
     user_id: int = get_jwt_identity()
 
     # get task description from the request
     new_description = request.json.get("description", None)
-    print(new_description, "$$$$$$$")
+    new_duration = request.json.get("duration", None)
+    new_priority = request.json.get("priority", None)
 
+    task_to_be_updated = models.Task.query.join(models.User).filter(
+        user_id == user_id).filter(models.Task.id == task_id).first()
     if new_description:
-        # task_to_be_updated = models.Task.query.filter(
-        #     and_(id == task_id, user_id == user_id)).first()
-        task_to_be_updated = models.Task.query.filter(
-            and_(id == 1)).all()
-
-        print(task_to_be_updated, "@@@@@@@@@@@")
 
         if task_to_be_updated:
-            # task_to_be_updated.description = new_description
-            return jsonify(
-                {
-                    "success": True,
-                    "code": 200,
-                    "message": f"task updated {str(task_to_be_updated)}"
-                }
-            ), 200
+            task_to_be_updated.description = new_description
+            if new_duration:
+                task_to_be_updated.duration = new_duration
+            if new_priority:
+                task_to_be_updated.priority = new_priority
+
+            try:
+                task_to_be_updated.insert()
+
+                return jsonify(
+                    {
+                        "success": True,
+                        "code": 200,
+                        "message": f"task updated"
+                    }
+                ), 200
+            except Exception as e:
+                abort(500)
         else:
-            abort(404)
+            abort(404, "no such task exist for this user")
 
     abort(400, "request must contain task description")
 
-    # [] DELETE /tasks
+# [] DELETE /tasks
 
     # [] create a snippet for getting request details
