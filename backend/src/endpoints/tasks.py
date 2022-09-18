@@ -120,4 +120,31 @@ def update_task(task_id) -> Dict[str, str]:
 
 # [] DELETE /tasks
 
+
+@task.route("/tasks/<int:task_id>", methods=["DELETE"])
+@jwt_required()
+def delete_task(task_id) -> Dict[str, str]:
+
+    user_id: int = get_jwt_identity()
+
+    task_to_be_deleted = models.Task.query.join(models.User).filter(
+        user_id == user_id).filter(models.Task.id == task_id).first()
+
+    if task_to_be_deleted:
+
+        try:
+            task_to_be_deleted.delete()
+
+            return jsonify(
+                {
+                    "success": True,
+                    "code": 200,
+                    "message": f"task deleted"
+                }
+            ), 200
+        except Exception as e:
+            abort(500)
+    else:
+        abort(404, "no such task exist for this user")
+
     # [] create a snippet for getting request details
