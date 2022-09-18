@@ -386,6 +386,22 @@ class EffectTestCase(unittest.TestCase):
         # Ensure that there is a list of tasks
         self.assertEqual(data["message"], "task deleted")
 
+    def test_404_delete_task_invalid_task_id(self):
+        # login using the valid test user to get access_token
+        access_token = self.get_access_token()
+
+        data = self.make_api_call(
+            method_type="DELETE", address="/api/v1/tasks/99999", access_token=access_token)
+        # check success is True
+        self.assertEqual(data["success"], False)
+
+        # check status code
+        self.assertEqual(data["error"], 404)
+
+        # Ensure that there is a list of tasks
+        self.assertEqual(
+            data["message"], "not found: no such task exist for this user")
+
     # # [] test_get_categories
     # def test_get_categories(self):
     #     pass
