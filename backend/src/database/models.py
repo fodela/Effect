@@ -1,3 +1,4 @@
+from email.policy import default
 import os
 from datetime import datetime
 from typing import Dict
@@ -49,22 +50,6 @@ def db_drop_and_create_all() -> None:
     """
     db.drop_all()
     db.create_all()
-
-    # add one test case to help with testing
-    # user
-    # user = User(
-    #     username="testuser",
-    #     password="password",
-    #     email="testuser@email.com"
-    # )
-    # user.insert()
-
-    # # task
-    # task = Task(
-    #     description="test our endpoints",
-    #     user_id=1
-    # )
-    # task.insert()
 
 
 class CRUD():
@@ -131,14 +116,15 @@ class Task(db.Model, CRUD):
         db.ForeignKey("user.id"),
         nullable=False
     )
-    task_state_id = db.ForeignKey("TaskState.id")  # TODO make nullable = False
+    task_state_id = db.Column(
+        db.Integer,
+        db.ForeignKey("task_state.id")
+    )
     deadline = db.Column(db.DateTime)
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    category_id = db.ForeignKey("Category")  # TODO make nullable = False
-    # task_category = db.relationship(
-    #     "TaskCategory", backref="task", lazy=True)
+    category = db.Column(db.String(80))
 
     def format(self) -> Dict[str, str]:
         return {
@@ -167,10 +153,12 @@ TaskState
 class TaskState(db.Model, CRUD):
     __Table__name = "TaskState"
     id = db.Column(db.Integer, primary_key=True)
-    is_completed = db.Column(db.Boolean)  # TODO: add defaults
-    is_delegated = db.Column(db.Boolean)
-    do_immediately = db.Column(db.Boolean)
-    is_due = db.Column(db.Boolean)
+    is_completed = db.Column(db.Boolean, default=False)
+    is_delegated = db.Column(db.Boolean, default=False)
+    do_immediately = db.Column(db.Boolean, default=False)
+    is_due = db.Column(db.Boolean, default=False)
+    tasks = db.relationship(
+        "Task", backref="task_state")
 
     def format(self):
         return {
@@ -183,50 +171,3 @@ class TaskState(db.Model, CRUD):
 
     def __repr__(self):
         return f"<TaskState | ID: {self.id} {'Completed' if self.is_completed else 'Not completed'} {'Delegated' if self.is_delegated else ''} {'Due' if self.is_due else ''}>"
-
-
-"""
-Category
-
-"""
-
-
-class Category(db.Model, CRUD):
-    __Table__name = "Category"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    # task_category = db.relationship(
-    #     "TaskCategory", backref="category", lazy=True)
-
-    def format(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-        }
-
-    def __repr__(self):
-        return f"<Category | ID: {self.id} Name: {self.name}>"
-
-
-"""
-TaskCategory
-
-"""
-
-
-# class TaskCategory(db.Model, CRUD):
-#     __Table__name = "TaskCategory"
-#     id = db.Column(db.Integer, primary_key=True)
-#     task_id = db.Column(
-#         db.Integer,
-#         db.ForeignKey("Task.id"),
-#         nullable=False
-#     )
-#     category_id = db.Column(
-#         db.Integer,
-#         db.ForeignKey("Category.id"),
-#         nullable=False
-#     )
-
-#     def __repr__(self):
-#         return f"<TaskCategory | ID: {self.id}>"
