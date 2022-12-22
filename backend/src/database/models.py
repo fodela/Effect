@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Dict
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-
+from flask_migrate import Migrate
 
 # GET USERNAME AND PASSWORD FROM LOCAL ENV. SEE env_example for more info
 load_dotenv()
@@ -15,12 +15,14 @@ DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 
 # Define database variables
 database_name = "effect_db"
-
 database_path = f"postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{'localhost:5432'}/{database_name}"
 
 
 # instantiate the database
 db = SQLAlchemy()
+
+# Instantiate migration
+migrate = Migrate()
 
 """
 setup_db(app)
@@ -40,6 +42,7 @@ def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
+    migrate.init_app(app, db)
 
 
 def db_drop_and_create_all() -> None:

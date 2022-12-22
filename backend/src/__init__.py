@@ -53,7 +53,7 @@ def create_app(test_config=None):
 
         return response
 
-    # enable easy jwt manipulation
+    # enable easy jwt manipulation using flask_jwt_extended
     JWTManager(app)
 
     app.register_blueprint(auth)
