@@ -1,69 +1,77 @@
-import axios from "axios";
 import { useState, useMemo } from "react";
+import { FiMoreHorizontal } from "react-icons/fi";
+import { MdModeEditOutline } from "react-icons/md";
 
-// const { REACT_APP_ACCUWEATHER_ACCESS_KEY } = process.env;
+import React from "react";
 
-let location = "ho ghana";
+const sampleWeather = {
+  city: "Ho",
+  desc: "Partly sunny",
+  icon: "C",
+  temp: "31",
+  feelsLike: "39",
+  rain: "0",
+  wind: "6",
+};
 
 const WeatherDetails = () => {
-	const [locationDetails, setLocationDetails] = useState(null);
+  const [weatherDetails, setWeatherDetails] = useState(sampleWeather);
+  const [isErr, setIsErr] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
-	const getLocationDetails = (searchedLocation) => {
-		console.log("location funx");
-		axios
-			.get(
-				`http://dataservice.accuweather.com/locations/v1/cities/search?apikey=Z7BLjCA9DVKV1q2GQR9bjmNbZcvcH4a3&q=${searchedLocation}`
-			)
-			.then((response) => {
-				setLocationDetails(response.data[0]);
-				localStorage.currentLocationDetails = JSON.stringify(locationDetails);
-				return locationDetails;
-			})
-			.catch((err) => console.log(err));
-		console.log(localStorage.currentLocationDetails);
-	};
-	// const myLocation = useMemo(
-	// 	() => getLocationDetails(location),
-	// 	[locationDetails]
-	// );
+  return (
+    <div>
+      <div
+        className="
+      flex flex-col gap-2 bg-black/80 absolute top-1 right-1 w-[85vw] max-w-md
+      px-4 py-2 rounded-md 
+      "
+      >
+        <p className="-mx-4 px-6  bg-[#494848ce] text-gray-400">
+          {isErr && errMsg}
+        </p>
+        <header className="flex justify-between items-center">
+          <div>
+            <div className="flex items-center">
+              <p className="text-xl ">{weatherDetails.city}</p>
+              <MdModeEditOutline />
+            </div>
+            <p>{weatherDetails.desc}</p>
+          </div>
+          <div className="flex gap-5">
+            <FiMoreHorizontal />
+          </div>
+        </header>
+        <div className="flex items-center">
+          <div className="text-6xl flex gap-4 flex-grow">
+            <i>{weatherDetails.icon}</i>
+            <h2>{weatherDetails.temp}°</h2>
+          </div>
+          <div className="text-gray-400 flex-grow">
+            <p>
+              Feels like{" "}
+              <span className="text-white">{weatherDetails.feelsLike} °</span>
+            </p>
+            <p>
+              Recent rain{" "}
+              <span className="text-white">{weatherDetails.rain} mm</span>
+            </p>
+            <p>
+              Wind{" "}
+              <span className="text-white">{weatherDetails.wind} km/h</span>
+            </p>
+          </div>
+        </div>
 
-	const getWeatherDetails = (location) => {
-		axios.get();
-	};
+        <a href="https://www.accuweather.com/" className="text-xs text-right">
+          <strong>Accuweather</strong> more weather &rarr;
+        </a>
 
-	// getLocationInfo();
-
-	// console.log("api key", REACT_APP_ACCUWEATHER_ACCESS_KEY);
-
-	// const locationDetails = getLocationKey();
-	// const city = locationDetails.EnglishName;
-	// const locationKey = locationDetails.Key;
-
-	return (
-		<div>
-			<div className="flex flex-col bg-black/70 absolute top-1 right-1 w-[90vw] ">
-				<header className="flex justify-between">
-					<div>
-						<p className="text-xl ">weatherInfo.EnglishName</p>
-						<p>Partly cloudy</p>
-					</div>
-					<div className="flex gap-5">
-						<div>...</div>
-						<button className="rounded-full px-2 py-1 bg-gray-500">x</button>
-					</div>
-				</header>
-				<div className="text-6xl flex gap-4">
-					<i>C</i>
-					<h2>24°</h2>
-				</div>
-				<a href="https://www.accuweather.com/" className="text-xs text-right">
-					<strong>Accuweather</strong> more weather &rarr;
-				</a>
-
-				<section></section>
-			</div>
-			<div></div>
-		</div>
-	);
+        <section></section>
+      </div>
+      <div></div>
+    </div>
+  );
 };
+
 export default WeatherDetails;
