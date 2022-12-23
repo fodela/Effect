@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-require("dotenv").config();
 
-// const API_KEY = process.env.API_KEY;
 const useLocationApi = (API_KEY, searchedCity = "ho", offset = 25) => {
   const [locationKey, setLocationKey] = useState(null);
+  const [locationName, setLocationName] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getLocationKey = async () => {
@@ -18,22 +18,23 @@ const useLocationApi = (API_KEY, searchedCity = "ho", offset = 25) => {
             },
           }
         );
+
         const data = response.data;
         if (data.length > 0) {
           setLocationKey(data[0].Key);
+          setLocationName(data[0].EnglishName);
         } else {
           setError("No location found");
         }
       } catch (error) {
         setError(error.message);
       }
-
-      if (searchedCity) {
-        getLocationKey();
-      }
     };
-  }, [searchedCity]);
-  return [locationKey, error];
+    if (searchedCity) {
+      getLocationKey();
+    }
+  }, [searchedCity, API_KEY]);
+  return [locationName, locationKey, error];
 };
 
 export default useLocationApi;
