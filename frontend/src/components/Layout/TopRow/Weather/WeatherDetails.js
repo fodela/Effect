@@ -20,11 +20,12 @@ const API_KEY = "Z7BLjCA9DVKV1q2GQR9bjmNbZcvcH4a3";
 
 const WeatherDetails = ({ open }) => {
   const [city, setCity] = useState("vancouver");
-  const [locationName, locationKey, locationKeyError] = useLocationApi(
-    API_KEY,
-    city
-  );
-  const [weatherDetails, weatherError] = useWeatherApi(API_KEY, locationKey);
+  // const [locationName, locationKey, locationKeyError] = useLocationApi(
+  //   API_KEY,
+  //   city
+  const [locationName, locationKey, locationKeyError] = useState();
+  // const [weatherDetails, weatherError] = useWeatherApi(API_KEY, locationKey);
+  const [weatherDetails, weatherError] = useState("");
   const [isOpen, setIsOpen] = useState(open);
   const weatherRef = useRef();
   let props = { tabIndex: 0 };

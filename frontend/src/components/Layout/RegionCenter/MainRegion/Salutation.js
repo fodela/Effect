@@ -1,4 +1,9 @@
 const Salutation = () => {
-	return <div className="text-3xl">Good evening, Fodela.</div>;
+  return (
+    <div className="self-center text-3xl relative">
+      <div className="bgShadow" />
+      Good evening, Fodela.
+    </div>
+  );
 };
 export default Salutation;

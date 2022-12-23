@@ -3,15 +3,15 @@ import MainTask from "./MainTask";
 import Salutation from "./Salutation";
 
 const MainRegion = ({ children }) => {
-	return (
-		<div
-			className="p-5 mx-auto text-center
+  return (
+    <div
+      className="p-5 mx-auto text-center
         flex flex-col justify-between gap-5 "
-		>
-			<CountdownTimer />
-			<Salutation />
-			<MainTask />
-		</div>
-	);
+    >
+      <CountdownTimer />
+      <Salutation />
+      <MainTask />
+    </div>
+  );
 };
 export default MainRegion;

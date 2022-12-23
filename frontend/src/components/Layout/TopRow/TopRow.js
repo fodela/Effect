@@ -4,13 +4,13 @@ import WeatherDetails from "./Weather/WeatherDetails";
 const TopRow = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="region-top flex justify-between  place-items-center">
-      <div className="logo h-12 w-12 bg-[#444] rounded-lg p-1">
-        <img src="logo.png" alt="" />
-      </div>
+    <div className="region-top flex justify-between  place-items-center ">
+      <div className=""></div>
 
-      <div className="sm:relative">
+      <div className="sm:relative relative ">
+        <div className="bgShadow" />
         <button
+          className="relative"
           onClick={() => {
             setIsOpen(!isOpen);
           }}
