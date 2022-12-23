@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 body {
-	@apply text-white;
+  @apply text-white;
 }
 
 .open {
-	@apply opacity-100;
+  @apply opacity-100;
+}
+
+.bgShadow {
+  @apply absolute -inset-6 -z-10 bg-gradient-to-bl from-slate-700 blur;
 }
