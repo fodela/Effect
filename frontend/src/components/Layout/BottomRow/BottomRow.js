@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Todo from "./Todo/Todo";
+import { FiSettings } from "react-icons/fi";
 
 const BottomRow = () => {
   const [todoState, setTodoState] = useState("hidden");
@@ -18,9 +19,9 @@ const BottomRow = () => {
 
   return (
     <div className="flex justify-between ">
-      <div className="bottom-left flex gap-2 relative">
+      <div className="bottom-left flex items-center gap-2 relative">
         <div className="bgShadow" />
-        <i>Se-I</i>
+        <FiSettings />
         <p>image info</p>
       </div>
       <div className="bottom-right relative">
