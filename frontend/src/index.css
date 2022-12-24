@@ -11,5 +11,5 @@ body {
 }
 
 .bgShadow {
-  @apply absolute -inset-6 -z-10 bg-gradient-to-bl from-gray-400 blur;
+  @apply absolute -inset-4 -z-10 bg-gradient-to-br from-gray-600 rounded-full blur opacity-50;
 }
