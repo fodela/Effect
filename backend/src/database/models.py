@@ -1,7 +1,7 @@
 from email.policy import default
 import os
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Union
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_migrate import Migrate
@@ -78,7 +78,7 @@ User
 
 
 class User(db.Model, CRUD):
-    __Table__name = "User"
+    __Table__name = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -119,58 +119,40 @@ class Task(db.Model, CRUD):
         db.ForeignKey("user.id"),
         nullable=False
     )
-    task_state_id = db.Column(
-        db.Integer,
-        db.ForeignKey("task_state.id")
-    )
-    deadline = db.Column(db.DateTime)
+    is_completed = db.Column(db.Boolean, default=False)
+    is_delegated = db.Column(db.Boolean, default=False)
+    do_immediately = db.Column(db.Boolean, default=False)
+    is_due = db.Column(db.Boolean, default=False)
+   
+    # task_state_id = db.Column(
+    #     db.Integer,
+    #     db.ForeignKey("task_state.id")
+    # )
+    # deadline = db.Column(db.DateTime)
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     category = db.Column(db.String(80))
 
-    def format(self) -> Dict[str, str]:
+    def format(self) ->Dict[str, Union[str, Dict[str, str]]]:
         return {
             "id": self.id,
             "description": self.description,
             "duration": self.duration,
             "priority": self.priority,
             "user_id": self.user_id,
-            # "task_state_id": self.task_state_id,
             "deadline": self.deadline,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
-
+            "task_state": {
+                "is_completed": self.is_completed,
+                "is_delegated" : self.is_delegated,
+                "do_immediately": self.do_immediately,
+                "is_due": self.is_due
+            }
         }
+
 
     def __repr__(self):
         return f"<Task | ID: {self.id} Description: {self.description}>"
 
-
-"""
-TaskState
-
-"""
-
-
-class TaskState(db.Model, CRUD):
-    __Table__name = "TaskState"
-    id = db.Column(db.Integer, primary_key=True)
-    is_completed = db.Column(db.Boolean, default=False)
-    is_delegated = db.Column(db.Boolean, default=False)
-    do_immediately = db.Column(db.Boolean, default=False)
-    is_due = db.Column(db.Boolean, default=False)
-    tasks = db.relationship(
-        "Task", backref="task_state")
-
-    def format(self):
-        return {
-            "id": self.id,
-            "is_delegated": self.is_delegated,
-            "do_immediately": self.do_immediately,
-            "is_completed": self.is_completed,
-            "is_due": self.is_due
-        }
-
-    def __repr__(self):
-        return f"<TaskState | ID: {self.id} {'Completed' if self.is_completed else 'Not completed'} {'Delegated' if self.is_delegated else ''} {'Due' if self.is_due else ''}>"
