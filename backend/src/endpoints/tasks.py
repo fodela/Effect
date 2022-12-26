@@ -39,7 +39,7 @@ def get_tasks():
 
 @task.post("/tasks")
 @jwt_required()
-def post_task() -> Dict[str, str]:
+def post_task():
 
     # get user_id
     user_id: int = get_jwt_identity()
@@ -48,7 +48,7 @@ def post_task() -> Dict[str, str]:
     description: str = request.json.get("description", None)
     duration: int = request.json.get("duration", None)
     priority: int = request.json.get("priority", None)
-    task_state_id: int = request.json.get("task_state_id", None)
+    task_state: int = request.json.get("task_state", None)
     deadline: str = request.json.get("deadline", None)
 
     # check validity of the request
@@ -59,7 +59,6 @@ def post_task() -> Dict[str, str]:
                        description=description,
                        duration=duration,
                        priority=priority,
-                       task_state_id=task_state_id,
                        deadline=deadline
                        )
 
@@ -82,7 +81,7 @@ def post_task() -> Dict[str, str]:
 # [x] PATCH /tasks
 @task.route("/tasks/<int:task_id>", methods=["PATCH"])
 @jwt_required()
-def update_task(task_id) -> Dict[str, str]:
+def update_task(task_id):
     user_id: int = get_jwt_identity()
 
     # get task description from the request
@@ -123,7 +122,7 @@ def update_task(task_id) -> Dict[str, str]:
 
 @task.route("/tasks/<int:task_id>", methods=["DELETE"])
 @jwt_required()
-def delete_task(task_id) -> Dict[str, str]:
+def delete_task(task_id):
 
     user_id: int = get_jwt_identity()
 

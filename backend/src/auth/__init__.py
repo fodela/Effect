@@ -3,6 +3,7 @@ import json
 from typing import Dict, List
 from flask import Blueprint, request,  jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.exceptions import HTTPException
 from flask_jwt_extended import (jwt_required,
                                 create_access_token,
                                 create_refresh_token,
@@ -71,34 +72,40 @@ def login():
     email: str = request.json.get("email", "")
     password: str = request.json.get("password", "")
 
-    user = User.query.filter_by(email=email).first()
+    try:
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            # Password validation
+            is_pwd_correct = check_password_hash(user.password, password)
 
-    if user:
-        # Password validation
-        is_pwd_correct = check_password_hash(user.password, password)
+            if is_pwd_correct:
+                refresh_token = create_refresh_token(identity=user.id)
 
-        if is_pwd_correct:
-            refresh_token = create_refresh_token(identity=user.id)
+                access_token = create_access_token(identity=user.id)
 
-            access_token = create_access_token(identity=user.id)
+                return jsonify(
+                    {
+                        "success": True,
+                        "code": 200,
+                        "refresh_token": refresh_token,
+                        "access_token": access_token,
+                        "username": user.username,
+                        "email": user.email,
+                    }
+                )
+        
 
-            return jsonify(
-                {
-                    "success": True,
-                    "code": 200,
-                    "refresh_token": refresh_token,
-                    "access_token": access_token,
-                    "username": user.username,
-                    "email": user.email,
-                }
-            )
+    except HTTPException as err:
+        return err
+
 
     abort(401, "invalid email or password")
 
 
 @auth.get("/me")
 @jwt_required()
-def me() -> Dict[str, str]:
+def me():
     user_id = get_jwt_identity()
 
     user_query = User.query.get(user_id)
