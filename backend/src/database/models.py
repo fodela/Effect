@@ -108,7 +108,7 @@ Task
 
 
 class Task(db.Model, CRUD):
-    __table__name = "Task"
+    __table__name = "tasks"
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String, nullable=False)
@@ -123,12 +123,8 @@ class Task(db.Model, CRUD):
     is_delegated = db.Column(db.Boolean, default=False)
     do_immediately = db.Column(db.Boolean, default=False)
     is_due = db.Column(db.Boolean, default=False)
-   
-    # task_state_id = db.Column(
-    #     db.Integer,
-    #     db.ForeignKey("task_state.id")
-    # )
-    # deadline = db.Column(db.DateTime)
+ 
+    deadline = db.Column(db.DateTime)
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
@@ -156,3 +152,21 @@ class Task(db.Model, CRUD):
     def __repr__(self):
         return f"<Task | ID: {self.id} Description: {self.description}>"
 
+class Project(db.Model, CRUD):
+    __Table__name = "projects"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=True)
+
+    def format(self) ->Dict[str, str]:
+        return {
+            "id": self.id,
+            "name": self.duration,
+            "description": self.description,
+        }
+    
+    def __repr__(self):
+
+        return f"<Project | ID: {self.id} Name: {self.name}>"
+
+   
