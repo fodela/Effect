@@ -31,6 +31,8 @@ const Login = () => {
         }
       );
       const data = res.data;
+      console.log("res 💁", res);
+      console.log("data 💻", data);
       setAuth({ email, password, data });
     } catch (error) {
       console.log(error);
@@ -39,7 +41,7 @@ const Login = () => {
   };
 
   return (
-    <div className="text-3xl">
+    <div className="text-xl sm:text-3xl">
       {!email ? (
         <form
           onSubmit={(event) => {
@@ -49,7 +51,7 @@ const Login = () => {
           }}
         >
           <input
-            className="outline-none border-b-2 bg-white text-gray-900"
+            className="outline-none border-b-2    bg-inherit opacity-90"
             type="email"
             placeholder="Enter your email"
             ref={emailRef}
@@ -58,7 +60,7 @@ const Login = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <input
-            className="outline-none border-b-2 bg-white text-gray-900"
+            className="outline-none border-b-2 bg-inherit "
             type="password"
             placeholder="Enter your password"
             ref={pwdRef}
