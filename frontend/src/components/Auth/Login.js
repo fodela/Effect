@@ -31,12 +31,26 @@ const Login = () => {
         }
       );
       const data = res.data;
+      const access_token = res?.data?.access_token;
+      const refresh_token = res?.data?.refresh_token;
       console.log("res 💁", res);
       console.log("data 💻", data);
-      setAuth({ email, password, data });
+      setAuth({
+        email,
+        password,
+        access_token,
+        refresh_token,
+      });
     } catch (error) {
-      console.log(error);
-      setErrMsg(error.errMsg);
+      if (!error?.response) {
+        setErrMsg("No server response");
+      } else if (error.response?.status == 400) {
+        setErrMsg("Missing username or password");
+      } else if (error.response?.status == 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Login Failed");
+      }
     }
   };
 
