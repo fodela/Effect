@@ -2,10 +2,8 @@ import React from "react";
 import useWallpaper from "../../hooks/useWallpaper";
 const apiKey = "ssxRTObTWUTsTNRA4FCR6sUIeznLzrtbwT6JkUzWZLA";
 const Layout = (props) => {
-  const [wallpaper, wallpaperError] = useWallpaper(apiKey);
-  if (wallpaperError) {
-    console.log("Wallpaper Error: ", wallpaperError);
-  }
+  const [wallpaper] = useWallpaper(apiKey);
+
   return (
     <div
       className="h-screen relative  bg-cover  bg-center "

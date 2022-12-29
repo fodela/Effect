@@ -67,8 +67,7 @@ const TopRow = () => {
             <WeatherDetails open={isOpen} />
           </div>
         </div>
-      )}
-      //{" "}
+      )}{" "}
     </ErrorBoundary>
   );
 };
