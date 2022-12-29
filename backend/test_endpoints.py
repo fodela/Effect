@@ -231,7 +231,7 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "bad request: username must contain alphabet and numbers only and must not contain spaces")
 
-    # # [x] test_auth_login
+    # [x] test_auth_login
     def test_auth_login(self):
         # res = self.client().post("/api/v1/auth/login", json=self.valid_user)
         data = self.make_api_call(
@@ -261,10 +261,7 @@ class EffectTestCase(unittest.TestCase):
             data["message"], "unauthorized: invalid email or password")
 
     def test_401_auth_login_invalid_password(self):
-        # res = self.client().post("api/v1/auth/login", json={
-        #     "password": "passwordtes",
-        #     "email": "useremail@email.com"
-        # })
+        
         data = self.make_api_call(method_type="POST", address="/api/v1/auth/login", body={
             "password": "passwordtes",
             "email": "useremail@email.com"
@@ -275,7 +272,7 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "unauthorized: invalid email or password")
 
-    # [] test_get_tasks
+    # [x] test_get_tasks
 
     def test_get_tasks(self):
         access_token = self.get_access_token()
@@ -292,13 +289,6 @@ class EffectTestCase(unittest.TestCase):
         # Ensure that there is a list of tasks
         self.assertIsInstance(data["tasks"], list)
 
-        # self.assertEqual(data[-1]["task_state"],{
-        #         "is_completed": False,
-        #         "is_delegated" : False,
-        #         "do_immediately": False,
-        #         "is_due": False
-        #     })
-
     
     # [x] test_post_tasks
 
@@ -307,9 +297,7 @@ class EffectTestCase(unittest.TestCase):
         access_token = self.get_access_token()
 
         data = self.make_api_call(method_type="POST",
-                                  address="api/v1/tasks", access_token=access_token, body={"description": "finish backend of effect",
-                                    "user_id": 1
-                                                                                           })
+                                  address="api/v1/tasks", access_token=access_token, body={"description": "finish backend of effect"                                                })
 
         # check success is True
         self.assertEqual(data["success"], True)
@@ -318,6 +306,10 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["code"], 200)
 
         self.assertEqual(data["message"], "task created")
+
+        # Ensure that there is a list of tasks
+        self.assertIsInstance(data["tasks"], list)
+
 
     def test_400_post_tasks_request_has_no_description(self):
         # login using the valid test user to get access_token
@@ -351,6 +343,10 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(data["message"], "task updated")
 
         self.assertEqual(data["success"], True)
+
+        # Ensure that there is a list of tasks
+        self.assertIsInstance(data["tasks"], list)
+
 
     def test_404_update_tasks_task_not_found(self):
         access_token = self.get_access_token()
@@ -395,6 +391,10 @@ class EffectTestCase(unittest.TestCase):
         # Ensure that there is a list of tasks
         self.assertEqual(data["message"], "task deleted")
 
+        # Ensure that there is a list of tasks
+        self.assertIsInstance(data["tasks"], list)
+
+
     def test_404_delete_task_invalid_task_id(self):
         # login using the valid test user to get access_token
         access_token = self.get_access_token()
@@ -411,20 +411,20 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "not found: no such task exist for this user")
 
-    # # [] test_get_categories
-    # def test_get_categories(self):
+    # # [] test_get_projects
+    # def test_get_projects(self):
     #     pass
 
-    # # [] test_post_categories
-    # def test_post_categories(self):
+    # # [] test_post_projects
+    # def test_post_projects(self):
     #     pass
 
-    # # [] test_patch_categories
-    # def test_patch_categories(self):
+    # # [] test_patch_projects
+    # def test_patch_projects(self):
     #     pass
 
-    # # [] test_delete_categories
-    # def test_delete_categories(self):
+    # # [] test_delete_projects
+    # def test_delete_projects(self):
     #     pass
 
 
