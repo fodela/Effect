@@ -1,5 +1,3 @@
-import json
-import string
 
 from flask import Blueprint, request, abort, jsonify
 from typing import Dict
@@ -48,9 +46,8 @@ def post_task():
     description: str = request.json.get("description", None)
     duration: int = request.json.get("duration", None)
     priority: int = request.json.get("priority", None)
-    task_state: int = request.json.get("task_state", None)
     deadline: str = request.json.get("deadline", None)
-
+    
     # check validity of the request
     if not description or not user_id:
         abort(400, "You must provide a description of the task")
@@ -67,11 +64,22 @@ def post_task():
     try:
         task.insert()
 
+        tasks_query = models.Task.query.join(
+            models.User).filter(user_id == user_id).all()
+
+        # tasks_query = None
+        if tasks_query:
+            tasks = [task.format() for task in tasks_query]
+            tasks = tasks
+        else:
+            tasks = []
+
         return jsonify(
             {
                 "success": True,
                 "code": 200,
-                "message": "task created"
+                "message": "task created",
+                "tasks":tasks
             }
         ), 200
     except Exception as e:
@@ -86,6 +94,7 @@ def update_task(task_id):
 
     # get task description from the request
     new_description = request.json.get("description", None)
+    
     new_duration = request.json.get("duration", None)
     new_priority = request.json.get("priority", None)
 
@@ -102,12 +111,22 @@ def update_task(task_id):
 
             try:
                 task_to_be_updated.insert()
+                tasks_query = models.Task.query.join(
+                    models.User).filter(user_id == user_id).all()
+
+                # tasks_query = None
+                if tasks_query:
+                    tasks = [task.format() for task in tasks_query]
+                    tasks = tasks
+                else:
+                    tasks = []
 
                 return jsonify(
                     {
                         "success": True,
                         "code": 200,
-                        "message": f"task updated"
+                        "message": f"task updated",
+                        "tasks":tasks
                     }
                 ), 200
             except Exception as e:
@@ -133,12 +152,22 @@ def delete_task(task_id):
 
         try:
             task_to_be_deleted.delete()
+            tasks_query = models.Task.query.join(
+                models.User).filter(user_id == user_id).all()
+
+            # tasks_query = None
+            if tasks_query:
+                tasks = [task.format() for task in tasks_query]
+                tasks = tasks
+            else:
+                tasks = []
 
             return jsonify(
                 {
                     "success": True,
                     "code": 200,
-                    "message": f"task deleted"
+                    "message": f"task deleted",
+                    "tasks": tasks
                 }
             ), 200
         except Exception as e:
