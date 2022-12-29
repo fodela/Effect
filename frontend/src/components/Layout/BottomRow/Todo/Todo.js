@@ -1,81 +1,85 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import NewTodo from "./NewTodo";
 import TodoItem from "./TodoItem/TodoItem";
+import useAuth from "../../../../hooks/useAuth";
+import axios from "../../../../api/axios";
+const Todo = () => {
+  const [allTasks, setAllTasks] = useState(null);
+  const [taskRequestError, setTaskRequestError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-class Todo extends Component {
-	state = {
-		allTasks: [
-			{ description: "Go Big or go Home" },
-			{
-				description: "Finish Pomodoro timer",
-				done: true,
-				todoClass: "text-white/50 line-through",
-			},
-			{ description: "Work on presentation slides" },
-		],
-	};
+  const { access_token } = useAuth();
 
-	changeTodoStateHandler = (taskIndex) => {
-		const allTasks = [...this.state.allTasks];
-		allTasks[taskIndex].done = allTasks[taskIndex].done ? false : true;
+  useEffect(() => {
+    const fetchTodo = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get("/tasks", {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        setAllTasks(res.data?.tasks);
+        setIsLoading(false);
+      } catch (error) {
+        if (!error?.response) {
+          setTaskRequestError("Network error");
+        } else {
+          console.log(" 👽: ", error.response?.request?.statusText);
+          setTaskRequestError(error.response?.request?.statusText);
+        }
+      }
+    };
+    fetchTodo();
+  });
 
-		allTasks[taskIndex].todoClass = allTasks[taskIndex].done
-			? "text-white/50 line-through"
-			: "";
+  const changeTodoStateHandler = (taskIndex) => {
+    //     const allTasks = [...state.allTasks];
+    //     allTasks[taskIndex].done = allTasks[taskIndex].done ? false : true;
+    //     allTasks[taskIndex].todoClass = allTasks[taskIndex].done
+    //       ? "text-white/50 line-through"
+    //       : "";
+    //     setState({ allTasks: allTasks });
+    //     console.log();
+  };
 
-		this.setState({ allTasks: allTasks });
-		console.log();
-	};
+  const addTaskHandler = (event) => {
+    //     if (event.keyCode === 13) {
+    //       const taskDescription = event.target.value.trim();
+    //       const allTasks = [...state.allTasks];
+    //       if (event.target.value !== "") {
+    //         allTasks.push({ description: taskDescription });
+    //         setState({ allTasks: allTasks });
+    //         event.target.value = "";
+    //       }
+    //       console.log("task added");
+    //     }
+  };
 
-	addTaskHandler = (event) => {
-		if (event.keyCode === 13) {
-			const taskDescription = event.target.value.trim();
-			const allTasks = [...this.state.allTasks];
-			if (event.target.value !== "") {
-				allTasks.push({ description: taskDescription });
-				this.setState({ allTasks: allTasks });
-				event.target.value = "";
-			}
-			console.log("task added");
-		}
-	};
+  const deleteTaskHandler = (taskIndex) => {
+    //     const allTasks = [...state.allTasks];
+    //     allTasks.splice(taskIndex, 1);
+    //     setState({ allTasks: allTasks });
+    //     console.log(taskIndex, " deleted");
+  };
 
-	deleteTaskHandler = (taskIndex) => {
-		const allTasks = [...this.state.allTasks];
-		allTasks.splice(taskIndex, 1);
-		this.setState({ allTasks: allTasks });
-		console.log(taskIndex, " deleted");
-	};
-
-	render() {
-		let tasks;
-
-		tasks = this.state.allTasks.map((task, index) => {
-			return (
-				<TodoItem
-					key={index}
-					task={task}
-					deleteTask={() => this.deleteTaskHandler(index)}
-					changeTodoState={() => this.changeTodoStateHandler(index)}
-				/>
-			);
-		});
-		return (
-			<div
-				className={
-					"bg-black bg-opacity-70 absolute bottom-8 right-0 w-80   rounded-md" +
-					" " +
-					this.props.todoState
-				}
-			>
-				<div className="todo-header p-4">Today</div>
-				<div className="task-container max-h-[60vh] overflow-y-auto p-4">
-					{tasks}
-				</div>
-				<NewTodo addTask={this.addTaskHandler} />
-			</div>
-		);
-	}
-}
+  return (
+    <div
+      className={
+        "bg-black bg-opacity-70 absolute bottom-8 right-0 w-80   rounded-md"
+      }
+    >
+      <div className="todo-header p-4">Today</div>
+      <div className="task-container max-h-[60vh] overflow-y-auto p-4">
+        {allTasks ? (
+          allTasks.map((task) => <TodoItem task={task} />)
+        ) : (
+          <div>👎{taskRequestError}</div>
+        )}
+      </div>
+      <NewTodo addTask={addTaskHandler} />
+    </div>
+  );
+};
 
 export default Todo;
