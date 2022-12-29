@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "../../../../api/axios";
 import CountdownTimer from "../../../../containers/CountdownTimer";
+
+import useAuth from "../../../../hooks/useAuth";
 import Login from "../../../Auth/Login";
 import Signup from "../../../Auth/Signup";
 import MainTask from "./MainTask";
@@ -7,7 +10,28 @@ import Salutation from "./Salutation";
 
 const MainRegion = ({ children }) => {
   const [me, setMe] = useState(null);
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(true);
+  const { auth } = useAuth();
+  const { access_token, refresh_token } = auth;
+
+  useEffect(() => {
+    console.log(" 👍", access_token);
+    const getUser = async () => {
+      try {
+        if (access_token) {
+          const res = await axios.get(
+            "auth/me",
+
+            { headers: { Authorization: `Bearer ${access_token}` } }
+          );
+          setMe(res.data?.user);
+        }
+      } catch (error) {
+        console.log(" 👎", error);
+      }
+    };
+    getUser();
+  }, [access_token, refresh_token]);
   return (
     <div
       className="p-5 mx-auto text-center
