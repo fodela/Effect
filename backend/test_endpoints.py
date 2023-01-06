@@ -272,6 +272,17 @@ class EffectTestCase(unittest.TestCase):
         self.assertEqual(
             data["message"], "unauthorized: invalid email or password")
 
+    # [] test refresh token
+    def test_refresh_token(self):
+        access_token = self.get_access_token()
+        
+        data = self.make_api_call(address="api/v1/auth/refresh", access_token=access_token)
+
+        self.assertEqual(data["success"], True)
+        self.assertEqual(data["code"], 200)
+        self.assertTrue(data["access_token"])
+       
+
     # [x] test_get_tasks
 
     def test_get_tasks(self):
