@@ -97,6 +97,7 @@ def login():
         
 
     except HTTPException as err:
+        abort(err.code)
         return err
 
 
@@ -121,7 +122,7 @@ def me():
         abort(400)
 
 
-@auth.get("/token/refresh")
+@auth.get("/refresh")
 @jwt_required()
 def refresh_user_token():
     # get user_id
@@ -131,5 +132,7 @@ def refresh_user_token():
     access_token = create_access_token(identity=user_id)
 
     return jsonify({
+        "success": True,
+        "code": 200,
         "access_token": access_token
     })

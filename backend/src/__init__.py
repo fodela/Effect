@@ -39,7 +39,7 @@ def create_app(test_config=None):
 
     # models.db_drop_and_create_all()
 
-    CORS(app, resources={r"api/*": {"origin": "*"}})
+    CORS(app, resources={r"*": {"origin": ["http://localhost:3000","http://localhost:3001"]}}, supports_credentials=True)
 
     @app.after_request
     def after_request(response):
