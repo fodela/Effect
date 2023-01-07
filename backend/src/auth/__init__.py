@@ -123,7 +123,7 @@ def me():
 
 
 @auth.get("/refresh")
-@jwt_required()
+@jwt_required(refresh=True)
 def refresh_user_token():
     # get user_id
     user_id: int = get_jwt_identity()
