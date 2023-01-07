@@ -83,6 +83,7 @@ def post_task():
             }
         ), 200
     except Exception as e:
+        print(e)
         abort(500)
 
 
@@ -97,44 +98,63 @@ def update_task(task_id):
     
     new_duration = request.json.get("duration", None)
     new_priority = request.json.get("priority", None)
+    new_is_completed = request.json.get("is_completed", None)
+    new_is_delegated = request.json.get("is_completed", None)
+    new_do_immediately = request.json.get("is_completed", None)
+    new_category = request.json.get("category", None)
 
     task_to_be_updated = models.Task.query.join(models.User).filter(
         user_id == user_id).filter(models.Task.id == task_id).first()
-    if new_description:
 
-        if task_to_be_updated:
+    if task_to_be_updated:
+        if new_description:
+
             task_to_be_updated.description = new_description
-            if new_duration:
-                task_to_be_updated.duration = new_duration
-            if new_priority:
-                task_to_be_updated.priority = new_priority
+        if new_duration:
+            task_to_be_updated.duration = new_duration
+        if new_priority:
+            task_to_be_updated.priority = new_priority
 
-            try:
-                task_to_be_updated.insert()
-                tasks_query = models.Task.query.join(
-                    models.User).filter(user_id == user_id).all()
+        if new_is_completed:
+            task_to_be_updated.is_completed = new_is_completed
 
-                # tasks_query = None
-                if tasks_query:
-                    tasks = [task.format() for task in tasks_query]
-                    tasks = tasks
-                else:
-                    tasks = []
+        if new_is_delegated:
+            task_to_be_updated.is_delegated = new_is_delegated
 
-                return jsonify(
-                    {
-                        "success": True,
-                        "code": 200,
-                        "message": f"task updated",
-                        "tasks":tasks
-                    }
-                ), 200
-            except Exception as e:
-                abort(500)
-        else:
-            abort(404, "no such task exist for this user")
+        if new_do_immediately:
+            task_to_be_updated.do_immediately = new_do_immediately
 
-    abort(400, "request must contain task description")
+        if new_category:
+            task_to_be_updated.category = new_category
+
+        
+
+        try:
+            task_to_be_updated.insert()
+            tasks_query = models.Task.query.join(
+                models.User).filter(user_id == user_id).all()
+
+            # tasks_query = None
+            if tasks_query:
+                tasks = [task.format() for task in tasks_query]
+                # tasks = tasks
+            else:
+                tasks = []
+
+            return jsonify(
+                {
+                    "success": True,
+                    "code": 200,
+                    "message": f"task updated",
+                    "tasks":tasks
+                }
+            ), 200
+        except Exception as e:
+            abort(500)
+    
+    abort(404, "no such task exist for this user")
+
+
 
 # [] DELETE /tasks
 
