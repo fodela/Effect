@@ -3,19 +3,7 @@ import Todo from "./Todo/Todo";
 import { FiSettings } from "react-icons/fi";
 
 const BottomRow = () => {
-  const [todoState, setTodoState] = useState("hidden");
-
-  const showStateHandler = () => {
-    console.log("todoStateHandled");
-    if (todoState === "visible") {
-      setTodoState("hidden");
-      console.log("hidden");
-    } else {
-      setTodoState("visible");
-      console.log("visible");
-    }
-    return todoState;
-  };
+  const [isTodoOpen, setIsTodoOpen] = useState(false);
 
   return (
     <div className="flex justify-between ">
@@ -26,8 +14,8 @@ const BottomRow = () => {
       </div>
       <div className="bottom-right relative">
         <div className="bgShadow" />
-        <button onClick={showStateHandler}>Todo</button>
-        <Todo todoState={todoState} />
+        <button onClick={() => setIsTodoOpen(!isTodoOpen)}>Todo</button>
+        <Todo isTodoOpen={isTodoOpen} />
       </div>
     </div>
   );
