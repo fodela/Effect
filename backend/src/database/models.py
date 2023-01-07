@@ -112,8 +112,8 @@ class Task(db.Model, CRUD):
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String, nullable=False)
-    duration = db.Column(db.Integer)
-    priority = db.Column(db.Integer)
+    duration = db.Column(db.Integer, default=25)
+    priority = db.Column(db.Integer, default=1)
     user_id = db.Column(
         db.Integer,
         db.ForeignKey("user.id"),
@@ -128,7 +128,8 @@ class Task(db.Model, CRUD):
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    category = db.Column(db.String(80))
+    category = db.Column(db.String(80), default="Inbox")
+    # project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
 
     def format(self) ->Dict[str, Union[str, Dict[str, str]]]:
         return {
