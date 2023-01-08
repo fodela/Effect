@@ -1,13 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { AuthProvider } from "./context/AuthProvider";
+import { WeatherProvider } from "./context/weatherContext";
+import UserProvider from "./context/UserProvider";
+import { TasksProvider } from "./context/TasksProvider";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <UserProvider>
+        <WeatherProvider>
+          <TasksProvider>
+            <App />
+          </TasksProvider>
+        </WeatherProvider>
+      </UserProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
 
