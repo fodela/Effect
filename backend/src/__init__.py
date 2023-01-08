@@ -37,7 +37,6 @@ def create_app(test_config=None):
 
     models.setup_db(app)
 
-    # models.db_drop_and_create_all()
 
     CORS(app, resources={r"*": {"origin": ["http://localhost:3000","http://localhost:3001"]}}, supports_credentials=True)
 
