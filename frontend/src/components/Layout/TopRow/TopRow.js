@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react";
 import { WeatherContext } from "../../../context/weatherContext";
-import ErrorBoundary from "../../../ErrorBoundary/ErrorBoundary";
 import WeatherDetails from "./Weather/WeatherDetails";
 import useLocationApi from "../../../hooks/useLocationApi";
 import useWeatherApi from "../../../hooks/useWeatherApi";
@@ -30,7 +29,7 @@ const TopRow = () => {
   }, [locationName, locationKey, locationKey, weatherDetails, weatherError]);
 
   return (
-    <ErrorBoundary>
+    <>
       {weatherError ? (
         <div>{weatherError}</div>
       ) : (
@@ -68,7 +67,7 @@ const TopRow = () => {
           </div>
         </div>
       )}{" "}
-    </ErrorBoundary>
+    </>
   );
 };
 export default TopRow;
