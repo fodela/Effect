@@ -38,7 +38,7 @@ def create_app(test_config=None):
     models.setup_db(app)
 
 
-    CORS(app, resources={r"*": {"origin": ["http://localhost:3000","http://localhost:3001"]}}, supports_credentials=True)
+    CORS(app, resources={r"*": {"origin": ["http://localhost:3000","http://localhost:3001","https://effect-fo.vercel.app"]}}, supports_credentials=True)
 
     @app.after_request
     def after_request(response):
