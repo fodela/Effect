@@ -27,7 +27,7 @@ const Todo = ({ isTodoOpen }) => {
       <div className="todo-header p-4">Today</div>
       <div className="task-container max-h-[60vh] overflow-y-auto p-4">
         {allTasks ? (
-          allTasks.map((task) => <TodoItem task={task} />)
+          allTasks.map((task) => <TodoItem key={task.id} task={task} />)
         ) : (
           <div className="text-red-400">{taskRequestError}</div>
         )}

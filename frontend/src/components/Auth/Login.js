@@ -40,7 +40,6 @@ const Login = ({ setIsRegistered }) => {
         refresh_token,
       });
     } catch (error) {
-      console.log(" 💤", pwdRef.current.value);
       pwdRef.current.value = "";
       setEmail(null);
       setPassword(null);
@@ -62,7 +61,7 @@ const Login = ({ setIsRegistered }) => {
       {!email ? (
         <>
           {errMsg && (
-            <div className="text-sm text-red-600 my-2">
+            <div className="text-sm text-red-600 bg-slate-300 my-2">
               ⚠️ Login error: {errMsg}
             </div>
           )}

@@ -10,14 +10,16 @@ const TodoItem = ({ task }) => {
   const { access_token } = auth;
   const refresh = useRefreshToken();
   const { setTasks } = useTasks();
+  const [isTaskDone, setIsTaskDone] = useState(task.task_state?.is_completed);
 
   // functions or Methods
   const handleDoneTodo = async () => {
+    setIsTaskDone(!isTaskDone);
     console.log(task.task_state?.is_completed);
     try {
       const res = await axios.patch(
         `/tasks/${task.id}`,
-        { ...task, is_completed: !task.task_state.is_completed },
+        { ...task, is_completed: isTaskDone },
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,8 +32,7 @@ const TodoItem = ({ task }) => {
     } catch (error) {
       if (!error.response) {
         setErrMsg("Network Error!");
-      } else if (error.response.data?.msg === "Token has expired") {
-        console.log(" 👍 💯 👎");
+      } else if (error.response.data?.msg === "👎💯👍 Token has expired") {
         refresh();
         handleDoneTodo();
       } else {
@@ -67,11 +68,11 @@ const TodoItem = ({ task }) => {
 
   // Return
   return (
-    <div className="flex items-start group justify-between" key={task.id}>
+    <div className="flex items-start group justify-between">
       <div>
         <input
-          checked={task.task_state?.is_completed}
-          // onChange={handleDoneTodo}
+          checked={isTaskDone}
+          onChange={handleDoneTodo}
           type="checkbox"
           name="taskDone"
           id="taskDone"
