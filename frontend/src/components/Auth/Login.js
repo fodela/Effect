@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
 
 const Login = ({ setIsRegistered }) => {
@@ -8,20 +8,20 @@ const Login = ({ setIsRegistered }) => {
 
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState();
 
   const { setAuth } = useContext(AuthContext);
   // autofocus
   useEffect(() => {
-    emailRef.current.focus();
-  }, []);
+    email ? pwdRef.current.focus() : emailRef.current.focus();
+  }, [email]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/auth/login",
+        "/auth/login",
         { email, password },
         {
           headers: {
@@ -40,13 +40,17 @@ const Login = ({ setIsRegistered }) => {
         refresh_token,
       });
     } catch (error) {
+      console.log(" 💤", pwdRef.current.value);
+      pwdRef.current.value = "";
       setEmail(null);
+      setPassword(null);
+      console.log(error);
       if (!error?.response) {
         setErrMsg("No server response");
       } else if (error.response?.status === 400) {
         setErrMsg("Missing username or password");
       } else if (error.response?.status === 401) {
-        setErrMsg("Unauthorized");
+        setErrMsg("Wrong email or password");
       } else {
         setErrMsg("Login Failed");
       }
@@ -56,20 +60,28 @@ const Login = ({ setIsRegistered }) => {
   return (
     <>
       {!email ? (
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setEmail(emailRef.current.value);
-            emailRef.current.value = "";
-          }}
-        >
-          <input
-            className="outline-none border-b-2    bg-inherit opacity-90"
-            type="email"
-            placeholder="Enter your email"
-            ref={emailRef}
-          />
-        </form>
+        <>
+          {errMsg && (
+            <div className="text-sm text-red-600 my-2">
+              ⚠️ Login error: {errMsg}
+            </div>
+          )}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setEmail(emailRef.current.value);
+              emailRef.current.value = "";
+            }}
+          >
+            <input
+              className="outline-none border-b-2    bg-inherit opacity-90"
+              type="email"
+              placeholder="Enter your email"
+              ref={emailRef}
+              onChange={() => setErrMsg(null)}
+            />
+          </form>
+        </>
       ) : (
         <form onSubmit={handleSubmit}>
           <input
