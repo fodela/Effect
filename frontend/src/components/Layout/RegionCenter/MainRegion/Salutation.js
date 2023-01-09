@@ -1,13 +1,27 @@
+import { useEffect, useState } from "react";
 import useUser from "../../../../hooks/useUser";
 
 const Salutation = () => {
+  const [greetings, setGreetings] = useState("");
+
+  useEffect(() => {
+    const date = new Date();
+    const currentHour = date.getHours();
+    if (currentHour < 12) {
+      setGreetings("Good morning,");
+    } else if (currentHour < 18) {
+      setGreetings("Good afternoon,");
+    } else {
+      setGreetings("Good evening,");
+    }
+  });
+
   const { user } = useUser();
 
-  console.log(" 🕵️‍♂️", user);
   return (
     <div className="self-center text-3xl relative">
       <div className="bgShadow" />
-      Good evening, <span className="capitalize">{user.username}</span>.
+      {greetings} <span className="capitalize">{user.username}</span>.
     </div>
   );
 };
