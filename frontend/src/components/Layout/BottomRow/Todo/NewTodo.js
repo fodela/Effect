@@ -39,7 +39,6 @@ const NewTodo = (props) => {
       if (!error.response) {
         setErrMsg("Network Error!");
       } else if (error.response.data?.msg === "Token has expired") {
-        console.log(" 👍 💯 👎");
         refresh();
         handleSubmit();
       } else {
@@ -50,11 +49,11 @@ const NewTodo = (props) => {
   };
   return (
     <form onSubmit={handleSubmit}>
-      {errMsg && <p className="text-red-300"> 🧧Add todo error: {errMsg}</p>}
+      {errMsg && <p className="text-red-300"> ⚠️Add todo error: {errMsg}</p>}
       <input
         type="text"
         ref={inputRef}
-        onChange={(event) => setDescription(event.target.value)}
+        onChange={(event) => setDescription(event.target.value.trim())}
         placeholder="New Todo"
         className="p-2 ml-4 bg-inherit  rounded-md outline-none
 			"

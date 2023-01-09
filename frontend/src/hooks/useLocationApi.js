@@ -10,7 +10,7 @@ const useLocationApi = (API_KEY, searchedCity = "ho", offset = 25) => {
     const getLocationKey = async () => {
       try {
         const response = await axios.get(
-          `http://dataservice.accuweather.com/locations/v1/cities/search?`,
+          `https://dataservice.accuweather.com/locations/v1/cities/search?`,
           {
             params: {
               apikey: API_KEY,

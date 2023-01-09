@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
 
 const Signup = ({ setIsRegistered }) => {
@@ -22,7 +22,7 @@ const Signup = ({ setIsRegistered }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/auth/register",
+        "auth/register",
         { username, email, password },
         {
           headers: {

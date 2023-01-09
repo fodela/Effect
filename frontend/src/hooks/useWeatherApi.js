@@ -9,7 +9,7 @@ const useWeatherApi = (API_KEY, locationKey) => {
     const getWeather = async () => {
       try {
         const response = await axios.get(
-          `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}`,
+          `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}`,
           {
             params: {
               apikey: API_KEY,
