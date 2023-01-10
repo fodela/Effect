@@ -15,7 +15,6 @@ const TodoItem = ({ task }) => {
   // functions or Methods
   const handleDoneTodo = async () => {
     setIsTaskDone(!isTaskDone);
-    console.log(task.task_state?.is_completed);
     try {
       const res = await axios.patch(
         `/tasks/${task.id}`,

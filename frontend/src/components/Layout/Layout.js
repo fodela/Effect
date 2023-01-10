@@ -6,7 +6,7 @@ const Layout = (props) => {
 
   return (
     <div
-      className="h-screen relative  bg-cover  bg-center "
+      className="h-screen relative  bg-cover  bg-center flex flex-col justify-between"
       style={{ backgroundImage: `url(${wallpaper})` }}
     >
       {props.children}

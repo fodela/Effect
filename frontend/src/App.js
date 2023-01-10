@@ -38,7 +38,7 @@ function App() {
     <div>
       <Layout className=" relative">
         <div
-          className="flex flex-col justify-start
+          className="flex flex-col justify-between
 				p-5
 				h-[100vh]
 				
@@ -47,12 +47,12 @@ function App() {
           {user.username ? (
             <>
               <TopRow />
-              <div className="grow main "></div>
-              <div className="region-main h-1/2 ">
+              {/* <div className="grow main "></div> */}
+              <div className="region-main  ">
                 <MainRegion />
+                <QuoteRegion />
               </div>
-              <QuoteRegion />
-              <div className="grow"></div>
+              {/* <div className="grow"></div> */}
               <BottomRow />
             </>
           ) : (

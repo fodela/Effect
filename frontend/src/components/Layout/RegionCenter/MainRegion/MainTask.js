@@ -1,13 +1,42 @@
+import { useEffect, useRef, useState } from "react";
 import TodoItem from "../../BottomRow/Todo/TodoItem/TodoItem";
 
 const MainTask = () => {
-	return (
-		<div className="flex text-xl gap-2  mx-auto">
-			<TodoItem
-				// done={() => changeMainTaskState()}
-				task="Post update on twitter"
-			/>
-		</div>
-	);
+  const mainFocusInputRef = useRef(null);
+  const [mainFocus, setMainFocus] = useState(null);
+
+  // fetch from localstorage focus that we stored with date
+  useEffect(() => {
+    mainFocusInputRef.current?.focus();
+  }, []);
+
+  const handleSubmit = () => {
+    setMainFocus({
+      description: mainFocusInputRef.current.value,
+      task_state: { is_completed: false },
+    });
+  };
+  return (
+    <div className="max-w-3xl text-2xl sm:text-3xl md:text-4xl md:max-w-4xl self-center text-white">
+      {mainFocus ? (
+        <div className="">
+          <TodoItem
+            // done={() => changeMainTaskState()}
+            task={mainFocus}
+          />
+        </div>
+      ) : (
+        <div className="">
+          <h3 className=" my-2">What is your main focus for today?</h3>
+          <form onSubmit={handleSubmit}>
+            <input
+              className="outline-none bg-inherit border-b-white border-b-2 w-full overflow-scroll"
+              ref={mainFocusInputRef}
+            />
+          </form>
+        </div>
+      )}
+    </div>
+  );
 };
 export default MainTask;

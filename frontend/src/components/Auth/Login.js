@@ -61,7 +61,7 @@ const Login = ({ setIsRegistered }) => {
       {!email ? (
         <>
           {errMsg && (
-            <div className="text-sm text-red-600 bg-slate-300 my-2">
+            <div className="text-sm md:text-lg text-red-600 bg-white p-1 shadow-md rounded-sm my-2">
               ⚠️ Login error: {errMsg}
             </div>
           )}
