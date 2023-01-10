@@ -1,6 +1,7 @@
 import { useState } from "react";
-import axios from "../../../../../api/axios";
+import { axiosPrivate } from "../../../../../api/axios";
 import useAuth from "../../../../../hooks/useAuth";
+import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import useRefreshToken from "../../../../../hooks/useRefreshToken";
 import useTasks from "../../../../../hooks/useTasks";
 
@@ -8,7 +9,7 @@ const TodoItem = ({ task }) => {
   const [errMsg, setErrMsg] = useState(null);
   const { auth } = useAuth();
   const { access_token } = auth;
-  const refresh = useRefreshToken();
+  const axiosPrivate = useAxiosPrivate();
   const { setTasks } = useTasks();
   const [isTaskDone, setIsTaskDone] = useState(task.task_state?.is_completed);
 
@@ -16,7 +17,7 @@ const TodoItem = ({ task }) => {
   const handleDoneTodo = async () => {
     setIsTaskDone(!isTaskDone);
     try {
-      const res = await axios.patch(
+      const res = await axiosPrivate.patch(
         `/tasks/${task.id}`,
         { ...task, is_completed: isTaskDone },
         {
@@ -31,19 +32,16 @@ const TodoItem = ({ task }) => {
     } catch (error) {
       if (!error.response) {
         setErrMsg("Network Error!");
-      } else if (error.response.data?.msg === "👎💯👍 Token has expired") {
-        refresh();
-        handleDoneTodo();
       } else {
         console.log(error);
-        setErrMsg(error.response?.request?.statusText);
+        setErrMsg(error.response.data?.msg);
       }
     }
   };
 
   const handleDeleteTask = async () => {
     try {
-      const res = await axios.delete(`/tasks/${task.id}`, {
+      const res = await axiosPrivate.delete(`/tasks/${task.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${access_token}`,
@@ -54,13 +52,9 @@ const TodoItem = ({ task }) => {
     } catch (error) {
       if (!error.response) {
         setErrMsg("Network Error!");
-      } else if (error.response.data?.msg === "Token has expired") {
-        console.log(" 👍 💯 👎");
-        refresh();
-        handleDoneTodo();
       } else {
         console.log(error);
-        setErrMsg(error.response?.request?.statusText);
+        setErrMsg(error.response.data?.msg);
       }
     }
   };

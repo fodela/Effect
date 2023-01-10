@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import axios from "../../../../api/axios";
+import { axiosPrivate } from "../../../../api/axios";
 import useAuth from "../../../../hooks/useAuth";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import useRefreshToken from "../../../../hooks/useRefreshToken";
 import useTasks from "../../../../hooks/useTasks";
 import LoadingSpinner from "../../../Loading/LoadingSpinner";
@@ -15,7 +16,7 @@ const NewTodo = (props) => {
 
   const { setTasks } = useTasks();
 
-  const refresh = useRefreshToken();
+  const axiosPrivate = useAxiosPrivate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,7 +24,7 @@ const NewTodo = (props) => {
     const controller = new AbortController();
 
     try {
-      const res = await axios.post(
+      const res = await axiosPrivate.post(
         "/tasks",
         { description },
         {
@@ -43,12 +44,9 @@ const NewTodo = (props) => {
       setIsLoading(false);
       if (!error.response) {
         setErrMsg("Network Error!");
-      } else if (error.response.data?.msg === "Token has expired") {
-        refresh();
-        handleSubmit();
       } else {
         console.log(error);
-        setErrMsg(error.response?.request?.statusText);
+        setErrMsg(error.response?.data?.msg);
       }
     }
   };

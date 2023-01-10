@@ -1,33 +1,34 @@
 import NewTodo from "./NewTodo";
 import TodoItem from "./TodoItem/TodoItem";
 import useAuth from "../../../../hooks/useAuth";
-import axios from "../../../../api/axios";
+import { axiosPrivate } from "../../../../api/axios";
 import useRefreshToken from "../../../../hooks/useRefreshToken";
 import useTasks from "../../../../hooks/useTasks";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../../Loading/LoadingSpinner";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 
 const Todo = ({ isTodoOpen }) => {
   // Authentication or Permission
   const { auth } = useAuth();
   const { access_token } = auth;
-  const refresh = useRefreshToken();
+  const axiosPrivate = useAxiosPrivate();
 
   // States
   const { tasks, setTasks } = useTasks();
   const { allTasks, taskRequestError } = tasks;
 
   const [isLoading, setIsLoading] = useState(false);
-  let isMounted;
 
   // Get all the tasks from the backend
   useEffect(() => {
+    let isMounted = true;
     setIsLoading(true);
     const controller = new AbortController();
 
     const fetchTodo = async () => {
       try {
-        const res = await axios.get("/tasks", {
+        const res = await axiosPrivate.get("/tasks", {
           signal: controller.signal,
           headers: {
             "Content-Type": "application/json",
@@ -35,26 +36,24 @@ const Todo = ({ isTodoOpen }) => {
           },
           withCredentials: true,
         });
-        setTasks((prev) => {
-          return { ...prev, allTasks: res.data?.tasks, taskRequestError: null };
-        });
+        isMounted &&
+          setTasks((prev) => {
+            return {
+              ...prev,
+              allTasks: res.data?.tasks,
+              taskRequestError: null,
+            };
+          });
         setIsLoading(false);
       } catch (error) {
         setTasks((prev) => ({
           ...prev,
           allTasks: [],
-          taskRequestError: error.response?.request?.statusText,
+          taskRequestError: error.response?.data?.msg,
         }));
         setIsLoading(false);
-        if (!error?.response) {
-        } else if (error.response.data?.msg === "Token has expired") {
-          console.log(" 👍 💯 👎");
-          refresh();
-          fetchTodo();
-        }
       }
     };
-    isMounted = true;
     fetchTodo();
 
     // clean up when component unmount
