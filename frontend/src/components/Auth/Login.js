@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 
 const Login = ({ setIsRegistered }) => {
   const emailRef = useRef();
@@ -9,6 +10,7 @@ const Login = ({ setIsRegistered }) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [errMsg, setErrMsg] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setAuth } = useContext(AuthContext);
   // autofocus
@@ -18,7 +20,7 @@ const Login = ({ setIsRegistered }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setIsLoading(true);
     try {
       const res = await axios.post(
         "/auth/login",
@@ -39,11 +41,13 @@ const Login = ({ setIsRegistered }) => {
         access_token,
         refresh_token,
       });
+      setIsLoading(false);
     } catch (error) {
       pwdRef.current.value = "";
       setEmail(null);
       setPassword(null);
       console.log(error);
+      setIsLoading(false);
       if (!error?.response) {
         setErrMsg("No server response");
       } else if (error.response?.status === 400) {
@@ -83,6 +87,7 @@ const Login = ({ setIsRegistered }) => {
         </>
       ) : (
         <form onSubmit={handleSubmit}>
+          {isLoading && <LoadingSpinner />}
           <input
             className="outline-none border-b-2 bg-inherit "
             type="password"

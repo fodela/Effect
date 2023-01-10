@@ -13,3 +13,34 @@ body {
 .bgShadow {
   @apply absolute -inset-4 -z-10 bg-gradient-to-br from-gray-600 rounded-full blur opacity-50;
 }
+
+@keyframes loading-spinner {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+.animation-loading-spinner {
+  animation-name: loading-spinner;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.delay-1s {
+  animation-delay: 0.2s;
+}
+
+.delay-2s {
+  animation-delay: 0.3s;
+}
+
+.delay-3s {
+  animation-delay: 0.4s;
+}

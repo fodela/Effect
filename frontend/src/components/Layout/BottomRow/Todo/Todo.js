@@ -3,20 +3,68 @@ import TodoItem from "./TodoItem/TodoItem";
 import useAuth from "../../../../hooks/useAuth";
 import axios from "../../../../api/axios";
 import useRefreshToken from "../../../../hooks/useRefreshToken";
-import Draggable from "../../../Draggable/Draggable";
-import useGetTasks from "../../../../hooks/useGetTasks";
 import useTasks from "../../../../hooks/useTasks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../../../Loading/LoadingSpinner";
 
 const Todo = ({ isTodoOpen }) => {
-  const getTasks = useGetTasks();
-  const { tasks } = useTasks();
+  // Authentication or Permission
+  const { auth } = useAuth();
+  const { access_token } = auth;
+  const refresh = useRefreshToken();
+
+  // States
+  const { tasks, setTasks } = useTasks();
   const { allTasks, taskRequestError } = tasks;
+
+  const [isLoading, setIsLoading] = useState(false);
+  let isMounted;
 
   // Get all the tasks from the backend
   useEffect(() => {
-    getTasks();
-  }, []);
+    setIsLoading(true);
+    const controller = new AbortController();
+
+    const fetchTodo = async () => {
+      try {
+        const res = await axios.get("/tasks", {
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+          withCredentials: true,
+        });
+        setTasks((prev) => {
+          return { ...prev, allTasks: res.data?.tasks, taskRequestError: null };
+        });
+        setIsLoading(false);
+      } catch (error) {
+        setTasks((prev) => ({
+          ...prev,
+          allTasks: [],
+          taskRequestError: error.response?.request?.statusText,
+        }));
+        setIsLoading(false);
+        if (!error?.response) {
+        } else if (error.response.data?.msg === "Token has expired") {
+          console.log(" 👍 💯 👎");
+          refresh();
+          fetchTodo();
+        }
+      }
+    };
+    isMounted = true;
+    fetchTodo();
+
+    // clean up when component unmount
+    return () => {
+      setIsLoading(false);
+      isMounted = false;
+      // clean any leftover request
+      controller.abort();
+    };
+  }, [access_token]);
 
   return (
     <div
@@ -24,6 +72,7 @@ const Todo = ({ isTodoOpen }) => {
         isTodoOpen && "invisible"
       }`}
     >
+      {isLoading && <LoadingSpinner />}
       <div className="todo-header p-4">Today</div>
       <div className="task-container max-h-[60vh] overflow-y-auto p-4">
         {allTasks ? (

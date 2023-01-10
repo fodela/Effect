@@ -3,11 +3,13 @@ import axios from "../../../../api/axios";
 import useAuth from "../../../../hooks/useAuth";
 import useRefreshToken from "../../../../hooks/useRefreshToken";
 import useTasks from "../../../../hooks/useTasks";
+import LoadingSpinner from "../../../Loading/LoadingSpinner";
 
 const NewTodo = (props) => {
   const inputRef = useRef();
   const [description, setDescription] = useState("");
   const [errMsg, setErrMsg] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { auth } = useAuth();
   const { access_token } = auth;
 
@@ -17,6 +19,7 @@ const NewTodo = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     const controller = new AbortController();
 
     try {
@@ -35,7 +38,9 @@ const NewTodo = (props) => {
       setTasks((prev) => ({ ...prev, allTasks: res.data?.tasks }));
       inputRef.current.value = "";
       setErrMsg(null);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       if (!error.response) {
         setErrMsg("Network Error!");
       } else if (error.response.data?.msg === "Token has expired") {
@@ -50,6 +55,7 @@ const NewTodo = (props) => {
   return (
     <form onSubmit={handleSubmit}>
       {errMsg && <p className="text-red-300"> ⚠️Add todo error: {errMsg}</p>}
+      {isLoading && <LoadingSpinner />}
       <input
         type="text"
         ref={inputRef}

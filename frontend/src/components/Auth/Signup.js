@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 
 const Signup = ({ setIsRegistered }) => {
   const userRef = useRef();
@@ -10,6 +11,7 @@ const Signup = ({ setIsRegistered }) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setAuth } = useContext(AuthContext);
   // autofocus
@@ -19,7 +21,7 @@ const Signup = ({ setIsRegistered }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setIsLoading(true);
     try {
       const res = await axios.post(
         "auth/register",
@@ -32,10 +34,10 @@ const Signup = ({ setIsRegistered }) => {
         }
       );
       const data = res.data;
-      console.log("res 💁", res);
-      console.log("data 💻", data);
+      setIsLoading(false);
       //   setAuth({ email, password, data });
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       setErrMsg(error.errMsg);
     }
@@ -43,6 +45,7 @@ const Signup = ({ setIsRegistered }) => {
 
   return (
     <>
+      {isLoading && <LoadingSpinner />}
       <form
         className="p-4 text-xl opacity-90 flex flex-col gap-4 rounded-md"
         onSubmit={handleSubmit}
