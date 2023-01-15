@@ -4,6 +4,7 @@ import useAuth from "../../../../../hooks/useAuth";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import useRefreshToken from "../../../../../hooks/useRefreshToken";
 import useTasks from "../../../../../hooks/useTasks";
+import TodoItemMenu from "./TodoItemMenu";
 
 const TodoItem = ({ task }) => {
   const [errMsg, setErrMsg] = useState(null);
@@ -12,7 +13,7 @@ const TodoItem = ({ task }) => {
   const axiosPrivate = useAxiosPrivate();
   const { setTasks } = useTasks();
   const [isTaskDone, setIsTaskDone] = useState(task.task_state?.is_completed);
-
+  const [isTodoItemMenuOpen, setIsTodoItemMenuOpen] = useState(false);
   // functions or Methods
   const handleDoneTodo = async () => {
     setIsTaskDone(!isTaskDone);
@@ -79,7 +80,13 @@ const TodoItem = ({ task }) => {
         className="last more invisible hover:cursor-pointer  group-hover:visible text-2xl  items-center "
         // onClick={deleteTask}
       >
-        <button onClick={handleDeleteTask}>...</button>
+        <button
+          className="relative"
+          onClick={() => setIsTodoItemMenuOpen(true)}
+        >
+          ...
+          {isTodoItemMenuOpen && <TodoItemMenu />}
+        </button>
       </div>
     </div>
   );
