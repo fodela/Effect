@@ -8,19 +8,23 @@ import { AuthProvider } from "./context/AuthProvider";
 import { WeatherProvider } from "./context/weatherContext";
 import UserProvider from "./context/UserProvider";
 import { TasksProvider } from "./context/TasksProvider";
+import { WallpaperProvider } from "./context/WallpaperProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <UserProvider>
-        <WeatherProvider>
-          <TasksProvider>
-            <App />
-          </TasksProvider>
-        </WeatherProvider>
-      </UserProvider>
-    </AuthProvider>
+    <WallpaperProvider>
+      <AuthProvider>
+        <UserProvider>
+          <WeatherProvider>
+            <TasksProvider>
+              <div id="root-modal" />
+              <App />
+            </TasksProvider>
+          </WeatherProvider>
+        </UserProvider>
+      </AuthProvider>
+    </WallpaperProvider>
   </React.StrictMode>
 );
 

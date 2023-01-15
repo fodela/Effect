@@ -39,15 +39,15 @@ const NewTodo = (props) => {
       setTasks((prev) => ({ ...prev, allTasks: res.data?.tasks }));
       inputRef.current.value = "";
       setErrMsg(null);
-      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false);
       if (!error.response) {
         setErrMsg("Network Error!");
       } else {
         console.log(error);
         setErrMsg(error.response?.data?.msg);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   return (

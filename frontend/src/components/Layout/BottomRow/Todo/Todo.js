@@ -1,8 +1,6 @@
 import NewTodo from "./NewTodo";
 import TodoItem from "./TodoItem/TodoItem";
 import useAuth from "../../../../hooks/useAuth";
-import { axiosPrivate } from "../../../../api/axios";
-import useRefreshToken from "../../../../hooks/useRefreshToken";
 import useTasks from "../../../../hooks/useTasks";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../../Loading/LoadingSpinner";
@@ -44,13 +42,13 @@ const Todo = ({ isTodoOpen }) => {
               taskRequestError: null,
             };
           });
-        setIsLoading(false);
       } catch (error) {
         setTasks((prev) => ({
           ...prev,
           allTasks: [],
           taskRequestError: error.response?.data?.msg,
         }));
+      } finally {
         setIsLoading(false);
       }
     };

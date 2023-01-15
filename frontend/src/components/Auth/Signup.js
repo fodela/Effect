@@ -34,12 +34,12 @@ const Signup = ({ setIsRegistered }) => {
         }
       );
       const data = res.data;
-      setIsLoading(false);
       //   setAuth({ email, password, data });
     } catch (error) {
-      setIsLoading(false);
       console.log(error);
       setErrMsg(error.errMsg);
+    } finally {
+      setIsLoading(false);
     }
   };
 

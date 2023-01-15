@@ -41,13 +41,11 @@ const Login = ({ setIsRegistered }) => {
         access_token,
         refresh_token,
       });
-      setIsLoading(false);
     } catch (error) {
       pwdRef.current.value = "";
       setEmail(null);
       setPassword(null);
       console.log(error);
-      setIsLoading(false);
       if (!error?.response) {
         setErrMsg("No server response");
       } else if (error.response?.status === 400) {
@@ -57,6 +55,8 @@ const Login = ({ setIsRegistered }) => {
       } else {
         setErrMsg("Login Failed");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
