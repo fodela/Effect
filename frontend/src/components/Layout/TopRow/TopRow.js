@@ -8,7 +8,7 @@ const API_KEY = "Z7BLjCA9DVKV1q2GQR9bjmNbZcvcH4a3";
 
 const TopRow = () => {
   const [city, setCity] = useState("ho");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isWeatherOpen, setIsWeatherOpen] = useState(false);
 
   const [locationName, locationKey, locationKeyError] = useLocationApi(
     API_KEY,
@@ -41,7 +41,7 @@ const TopRow = () => {
             <div
               className="relative cursor-pointer"
               onClick={() => {
-                setIsOpen(!isOpen);
+                setIsWeatherOpen(!isWeatherOpen);
               }}
             >
               <div className="flex flex-col items-end">
@@ -57,13 +57,16 @@ const TopRow = () => {
                   />
 
                   <h2 className="text-2xl">
-                    {Math.floor(weatherDetails?.Temperature.Metric.Value)}°
+                    {weatherDetails?.Temperature.Metric.Value &&
+                      Math.floor(weatherDetails?.Temperature.Metric.Value)}
+                    °
                   </h2>
                 </div>
                 <p>{locationName}</p>
               </div>
             </div>
-            <WeatherDetails open={isOpen} />
+
+            {isWeatherOpen && <WeatherDetails />}
           </div>
         </div>
       )}{" "}
