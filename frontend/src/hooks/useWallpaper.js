@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-
+import WallpaperContext from "../context/WallpaperProvider";
+// wallpaperContext
 const useWallpaper = (apiKey) => {
+  const { setWallpaperDetails } = useContext(WallpaperContext);
   const [imageUrl, setImageUrl] = useState(null);
   const [error, setError] = useState(null);
 
@@ -26,7 +28,9 @@ const useWallpaper = (apiKey) => {
             },
           }
         );
-        setImageUrl(response.data.results[randomNumber2].urls.regular);
+        const imageDetails = response.data?.results[randomNumber2];
+        setWallpaperDetails(imageDetails);
+        setImageUrl(imageDetails.urls.regular);
         // Store the image in local storage
       } catch (error) {
         setError(error.message);
