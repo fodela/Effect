@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
 import LoadingSpinner from "../Loading/LoadingSpinner";
+import Modal from "../Modal";
 
 const Login = ({ setIsRegistered }) => {
   const emailRef = useRef();
@@ -76,8 +77,9 @@ const Login = ({ setIsRegistered }) => {
               emailRef.current.value = "";
             }}
           >
+            <div className="bgShadow" />
             <input
-              className="outline-none border-b-2    bg-inherit opacity-90"
+              className="outline-none border-b-4 bg-inherit opacity-90 p-2 "
               type="email"
               placeholder="Enter your email"
               ref={emailRef}
@@ -87,9 +89,15 @@ const Login = ({ setIsRegistered }) => {
         </>
       ) : (
         <form onSubmit={handleSubmit}>
-          {isLoading && <LoadingSpinner />}
+          {isLoading && (
+            <Modal modalId={"root-modal"} open={isLoading}>
+              <LoadingSpinner />
+            </Modal>
+          )}
           <input
-            className="outline-none border-b-2 bg-inherit "
+            className="outline-none border-b-2 bg-inherit 
+            backdrop-blur
+            "
             type="password"
             placeholder="Enter your password"
             ref={pwdRef}
@@ -97,7 +105,7 @@ const Login = ({ setIsRegistered }) => {
           />
         </form>
       )}
-      <div className="text-lg mt-2">
+      <div className="text-lg mt-4">
         Don't have an account?
         <button onClick={() => setIsRegistered(false)}>Signup</button>
       </div>

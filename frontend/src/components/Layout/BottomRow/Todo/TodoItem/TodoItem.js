@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { axiosPrivate } from "../../../../../api/axios";
+import { useRef, useState } from "react";
 import useAuth from "../../../../../hooks/useAuth";
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import useRefreshToken from "../../../../../hooks/useRefreshToken";
@@ -14,6 +13,8 @@ const TodoItem = ({ task }) => {
   const { setTasks } = useTasks();
   const [isTaskDone, setIsTaskDone] = useState(task.task_state?.is_completed);
   const [isTodoItemMenuOpen, setIsTodoItemMenuOpen] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
+  const taskRef = useRef();
   // functions or Methods
   const handleDoneTodo = async () => {
     setIsTaskDone(!isTaskDone);
@@ -62,8 +63,8 @@ const TodoItem = ({ task }) => {
 
   // Return
   return (
-    <div className="flex items-start group justify-between">
-      <div>
+    <div className="flex group justify-between">
+      <div className="flex gap-1">
         <input
           checked={isTaskDone}
           onChange={handleDoneTodo}
@@ -72,20 +73,35 @@ const TodoItem = ({ task }) => {
           id="taskDone"
           className="m-2"
         />
-        <span className={"task-description my-1 " + task.todoClass}>
+        <p
+          className={
+            `task-description my-1 outline-none ${
+              isTaskDone && "text-white/50 line-through"
+            } ${isEditable && "border-b"} ` + task.todoClass
+          }
+          contentEditable={isEditable}
+          onDoubleClick={() => setIsEditable(true)}
+          onBlur={() => setIsEditable(false)}
+          ref={taskRef}
+        >
           {task.description}
-        </span>
+        </p>
       </div>
       <div
-        className="last more invisible hover:cursor-pointer  group-hover:visible text-2xl  items-center "
+        className="last more invisible hover:cursor-pointer  group-hover:visible text-2xl  "
         // onClick={deleteTask}
       >
         <button
-          className="relative"
+          className="relative self-center"
           onClick={() => setIsTodoItemMenuOpen(true)}
         >
           ...
-          {isTodoItemMenuOpen && <TodoItemMenu />}
+          {isTodoItemMenuOpen && (
+            <TodoItemMenu
+              deleteTask={handleDeleteTask}
+              setIsEditable={setIsEditable}
+            />
+          )}
         </button>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const useLocationApi = (API_KEY, searchedCity = "ho", offset = 25) => {
+  const [locations, setLocations] = useState(null);
   const [locationKey, setLocationKey] = useState(null);
   const [locationName, setLocationName] = useState(null);
   const [error, setError] = useState(null);
@@ -23,6 +24,7 @@ const useLocationApi = (API_KEY, searchedCity = "ho", offset = 25) => {
         if (data.length > 0) {
           setLocationKey(data[0].Key);
           setLocationName(data[0].EnglishName);
+          setLocations(data)
         } else {
           setError("No location found");
         }
@@ -34,7 +36,7 @@ const useLocationApi = (API_KEY, searchedCity = "ho", offset = 25) => {
       getLocationKey();
     }
   }, [searchedCity, API_KEY]);
-  return [locationName, locationKey, error];
+  return {locations,locationName, locationKey, error};
 };
 
 export default useLocationApi;

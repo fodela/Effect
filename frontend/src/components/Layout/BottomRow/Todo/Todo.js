@@ -66,8 +66,10 @@ const Todo = ({ isTodoOpen }) => {
   return (
     <div
       className={`bg-black bg-opacity-70 absolute bottom-8 right-0 w-80   rounded-md ${
-        isTodoOpen && "invisible"
-      }`}
+        !isTodoOpen && "invisible"
+      }
+        
+      `}
     >
       {isLoading && <LoadingSpinner />}
       <div className="todo-header p-4">Today</div>

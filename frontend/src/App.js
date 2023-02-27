@@ -9,10 +9,11 @@ import useAuth from "./hooks/useAuth";
 import Signup from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
 import useUser from "./hooks/useUser";
-// import ErrorBoundary from "./ErrorBoundary/ErrorBoundary";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const [isRegistered, setIsRegistered] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
   const { auth } = useAuth();
   const { access_token, refresh_token } = auth;
   const { user, setUser } = useUser();
@@ -36,6 +37,7 @@ function App() {
   }, [access_token, refresh_token]);
   return (
     <div>
+      <ToastContainer />
       <Layout className=" relative">
         <div
           className="flex flex-col justify-between
@@ -59,12 +61,10 @@ function App() {
             <div className="text-xl sm:text-3xl h-[100vh] flex flex-col items-center justify-center">
               {isRegistered ? (
                 <>
-                  <div className="bgShadow" />
                   <Login setIsRegistered={setIsRegistered} />
                 </>
               ) : (
                 <>
-                  <div className="bgShadow" />
                   <Signup setIsRegistered={setIsRegistered} />
                 </>
               )}

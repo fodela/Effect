@@ -3,16 +3,16 @@ import { WeatherContext } from "../../../context/weatherContext";
 import WeatherDetails from "./Weather/WeatherDetails";
 import useLocationApi from "../../../hooks/useLocationApi";
 import useWeatherApi from "../../../hooks/useWeatherApi";
-
+// import dotenv from "dotenv";
+// dotenv.config();
 const API_KEY = "Z7BLjCA9DVKV1q2GQR9bjmNbZcvcH4a3";
 
 const TopRow = () => {
-  const [city, setCity] = useState("ho");
   const [isWeatherOpen, setIsWeatherOpen] = useState(false);
 
-  const [locationName, locationKey, locationKeyError] = useLocationApi(
+  const { locationName, locationKey, locationKeyError } = useLocationApi(
     API_KEY,
-    city
+    "Ho"
   );
   const [weatherDetails, weatherError] = useWeatherApi(API_KEY, locationKey);
 

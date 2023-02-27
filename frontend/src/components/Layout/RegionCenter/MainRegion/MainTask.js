@@ -19,14 +19,16 @@ const MainTask = () => {
   return (
     <div className="max-w-3xl text-2xl sm:text-3xl md:text-4xl md:max-w-4xl self-center text-white">
       {mainFocus ? (
-        <div className="">
+        <div className="relative">
+          <div className="bgShadow" />
           <TodoItem
             // done={() => changeMainTaskState()}
             task={mainFocus}
           />
         </div>
       ) : (
-        <div className="">
+        <div className="relative">
+          <div className="bgShadow" />
           <h3 className=" my-2">What is your main focus for today?</h3>
           <form onSubmit={handleSubmit}>
             <input

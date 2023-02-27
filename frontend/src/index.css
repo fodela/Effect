@@ -26,6 +26,14 @@ body {
   }
 }
 
+.loading {
+  @apply w-6 h-6 rounded-full bg-gray-300 m-2;
+}
+
+.field {
+  @apply outline-none border border-white bg-black/40 rounded p-2 backdrop-blur-3xl;
+}
+
 .animation-loading-spinner {
   animation-name: loading-spinner;
   animation-duration: 1s;
