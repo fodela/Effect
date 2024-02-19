@@ -1,20 +1,20 @@
-import { useRef, useState } from "react";
-import useAuth from "../../../../../hooks/useAuth";
+import {useState } from "react";
+import {FiEdit3,FiTrash} from "react-icons/fi"
 import useAxiosPrivate from "../../../../../hooks/useAxiosPrivate";
 import useRefreshToken from "../../../../../hooks/useRefreshToken";
 import useTasks from "../../../../../hooks/useTasks";
-import TodoItemMenu from "./TodoItemMenu";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "../../../../../features/auth/authSlice";
 
 const TodoItem = ({ task }) => {
   const [errMsg, setErrMsg] = useState(null);
-  const { auth } = useAuth();
-  const { access_token } = auth;
+  const { accessToken } = useSelector(selectCurrentToken);
   const axiosPrivate = useAxiosPrivate();
   const { setTasks } = useTasks();
   const [isTaskDone, setIsTaskDone] = useState(task.task_state?.is_completed);
-  const [isTodoItemMenuOpen, setIsTodoItemMenuOpen] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
-  const taskRef = useRef();
+  const [newDescription,setNewDescription] = useState(task.description)
+
   // functions or Methods
   const handleDoneTodo = async () => {
     setIsTaskDone(!isTaskDone);
@@ -25,7 +25,7 @@ const TodoItem = ({ task }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           withCredentials: true,
         }
@@ -41,12 +41,39 @@ const TodoItem = ({ task }) => {
     }
   };
 
+  const handleEditTodo = async (e) =>{
+    e.preventDefault()
+    try {
+      const res = await axiosPrivate.patch(
+        `/tasks/${task.id}`,
+        { ...task, description: newDescription },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setTasks((prev) => ({ ...prev, allTasks: res.data?.tasks }));
+    } catch (error) {
+      if (!error.response) {
+        setErrMsg("Network Error!");
+      } else {
+        console.log(error);
+        setErrMsg(error.response.data?.msg);
+      }
+    }finally{
+      setIsEditable(false)
+    }
+  }
+
   const handleDeleteTask = async () => {
     try {
       const res = await axiosPrivate.delete(`/tasks/${task.id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         withCredentials: true,
       });
@@ -63,7 +90,7 @@ const TodoItem = ({ task }) => {
 
   // Return
   return (
-    <div className="flex group justify-between">
+    <div className="flex group justify-between animation-reveal-up items-center">
       <div className="flex gap-1">
         <input
           checked={isTaskDone}
@@ -73,36 +100,40 @@ const TodoItem = ({ task }) => {
           id="taskDone"
           className="m-2"
         />
-        <p
+       { isEditable?
+        <form onSubmit={(e)=>handleEditTodo(e)}>
+        <input
+          className="bg-inherit border-b-2 outline-none"
+          type="text"
+          value={newDescription}
+          autoFocus
+          onBlur={(e)=>handleEditTodo(e)}
+          onChange={(e) => setNewDescription(e.target.value)}
+        />
+      </form>
+      :
+        <div
           className={
             `task-description my-1 outline-none ${
               isTaskDone && "text-white/50 line-through"
-            } ${isEditable && "border-b"} ` + task.todoClass
+            }`
           }
-          contentEditable={isEditable}
           onDoubleClick={() => setIsEditable(true)}
-          onBlur={() => setIsEditable(false)}
-          ref={taskRef}
         >
           {task.description}
-        </p>
+        </div>}
       </div>
       <div
-        className="last more invisible hover:cursor-pointer  group-hover:visible text-2xl  "
-        // onClick={deleteTask}
+        className="invisible hover:cursor-pointer  group-hover:visible"
       >
-        <button
-          className="relative self-center"
-          onClick={() => setIsTodoItemMenuOpen(true)}
+        <div
+          className="flex gap-1"
         >
-          ...
-          {isTodoItemMenuOpen && (
-            <TodoItemMenu
-              deleteTask={handleDeleteTask}
-              setIsEditable={setIsEditable}
-            />
-          )}
-        </button>
+          <FiEdit3 size={20} onClick={()=>setIsEditable(true)}/>
+          <FiTrash size={20} onClick={handleDeleteTask}/>
+          
+      
+        </div>
       </div>
     </div>
   );
