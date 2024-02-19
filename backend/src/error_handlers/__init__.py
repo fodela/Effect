@@ -1,10 +1,10 @@
-from typing import Dict
-from flask import Flask, jsonify
+from typing import Any
+from flask import Flask, jsonify 
 
-app = Flask("src")
+app: Any = Flask("src")
 
 
-def bad_request(error):
+def bad_request(error:Any) -> Any:
     return (
         jsonify(
             {
@@ -15,18 +15,19 @@ def bad_request(error):
     )
 
 
-def unauthorized(error):
+def unauthorized(error:Any) -> Any:
     return (
         jsonify(
             {
                 "success": False,
                 "error": 401,
-                "message": f"unauthorized: {error.description}"}),
+                "message": f"unauthorized: {error.description}"}
+                ),
         401,
     )
 
 
-def forbidden(error):
+def forbidden(error: Any)-> Any:
     return (
         jsonify(
             {
@@ -37,7 +38,7 @@ def forbidden(error):
     )
 
 
-def not_found(error):
+def not_found(error:Any)-> Any:
     return (
         jsonify(
             {
@@ -49,7 +50,7 @@ def not_found(error):
 
 
 @app.errorhandler(409)
-def conflict(error) -> tuple:
+def conflict(error:Any) -> Any:
     return jsonify(
         {
             "success": False,
@@ -59,7 +60,7 @@ def conflict(error) -> tuple:
     ), 409
 
 
-def unprocessable(error):
+def unprocessable(error:Any) -> Any:
     return (
         jsonify(
             {
@@ -73,7 +74,7 @@ def unprocessable(error):
 
 
 @app.errorhandler(500)
-def server_error(error) -> tuple:
+def server_error(error:Any) -> Any:
     return (
         jsonify(
             {

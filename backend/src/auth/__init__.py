@@ -1,88 +1,100 @@
 # import validators
-import json
-from typing import Dict, List
-from flask import Blueprint, request,  jsonify, abort
+from flask import Blueprint, request, jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.exceptions import HTTPException
-from flask_jwt_extended import (jwt_required,
-                                create_access_token,
-                                create_refresh_token,
-                                get_jwt_identity
-                                )
-
+from werkzeug.exceptions import HTTPException  # type:ignore
+from flask_jwt_extended import (
+    get_jwt_identity,
+    jwt_required,  # type:ignore
+    create_access_token,  # type:ignore
+    create_refresh_token,  # type:ignore
+    unset_jwt_cookies,
+)  # type:ignore
 from ..database.models import User
+from typing import Optional, Any
+
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
 
 @auth.post("/register")
 def register():
     # def username email and password from request
-    username: str = request.json["username"]
-    email: str = request.json["email"]
-    password: str = request.json["password"]
 
-    # check if password is < 8 xters
-    if len(password) < 8:
-        abort(400, "password is too short. Password must be at least 8 characters")
+    username: Optional[str] = request.json.get("username", "")  # type:ignore
+    email: Optional[str] = request.json.get("email", "")  # type:ignore
+    password: Optional[str] = request.json.get("password", "")  # type:ignore
+    image_link: Optional[str] = request.json.get("image_link", "")  # type:ignore
 
-    # username must be greater than 3 xters
-    if len(username) <= 3:
-        abort(400, "username is too short. username must be 3 characters or more")
+    if not email or not password:
+        abort(400, "email and password are required")
+    else:
+        if len(password) < 8:
+            abort(400, "password is too short. Password must be at least 8 characters")
 
-    # username must be alphanumeric
-    if not username.isalnum() or " " in username:
-        abort(400, "username must contain alphabet and numbers only and must not contain spaces")
+        if username and len(username) <= 3:
+            abort(400, "username is too short. username must be 4 characters or more")
 
-    # [] check email validity
-    # # check if username already exist
-    # # validate email
-    # # if not validator.email(email):
-    # #     abort(400)
-    # if User.query.filter_by(username=username).first() is not None:
-    #     abort(409, "username already exist. Chose a different username")
+        # username must be alphanumeric
+        if username and (not username.isalnum() or " " in username):
+            abort(
+                400,
+                "username must contain alphabet and numbers only and must not contain spaces",
+            )
+        # existing email or username
+        existing_user = User.query.filter_by(email=email).first()  # type:ignore
+        if existing_user:
+            abort(409, "email already exist.")
 
-    # # check if email already exist
-    # if User.query.filter_by(email=email).first() is not None:
-    #     abort(409, "email already exist.")
+        existing_user = User.query.filter_by(username=username).first()  # type:ignore
+        if existing_user:
+            abort(409, "This username is already taken")
 
-    # hash the password
-    pwd_hash = generate_password_hash(password)
+        # if not validator.email(email):
+        #     abort(400)
 
-    try:
-        user = User(username=username, password=pwd_hash, email=email)
+        try:
+            pwd_hash: str = generate_password_hash(password)
+            user = User(password=pwd_hash, email=email)
 
-        user.insert()
+            if not username:
+                user.username = email.split("@")[0]
 
-        return jsonify({
-            "success": True,
-            "code": 200,
-            "message": "User created",
-            "user": {
-                "username": username,
-                "email": email
-            }
-        })
-    except Exception as e:
-        abort(500)
+            if image_link:
+                user.image_link = image_link
+
+            user.insert()
+
+            return jsonify(
+                {
+                    "success": True,
+                    "code": 200,
+                    "message": "User created",
+                    "user": {"username": username, "email": email},
+                }
+            )
+        except Exception as e:
+            print(e)
+            abort(500)
 
 
 # [x]: login
 @auth.post("/login")
 def login():
-    email: str = request.json.get("email", "")
-    password: str = request.json.get("password", "")
+    email: str = request.json.get("email", "")  # type:ignore
+    password: str = request.json.get("password", "")  # type:ignore
 
-    try:
-        user = User.query.filter_by(email=email).first()
-        
-        if user:
-            # Password validation
-            is_pwd_correct = check_password_hash(user.password, password)
+    if not email or not password:
+        abort(400, "email and password are required")
+    else:
+        try:
+            user: Any = User.query.filter_by(email=email).first()  # type:ignore
 
-            if is_pwd_correct:
-                refresh_token = create_refresh_token(identity=user.id)
+            if not user:
+                abort(401, "invalid email or password")
 
-                access_token = create_access_token(identity=user.id)
+            if check_password_hash(user.password, password):
+                access_token, refresh_token = create_access_token(
+                    identity=user.id
+                ), create_refresh_token(identity=user.id)
 
                 return jsonify(
                     {
@@ -94,45 +106,42 @@ def login():
                         "email": user.email,
                     }
                 )
-        
 
-    except HTTPException as err:
-        abort(err.code)
-        return err
-
-
-    abort(401, "invalid email or password")
+            else:
+                abort(401, "invalid email or password")
+        except Exception as e:
+            abort(500, "Server Error")
 
 
 @auth.get("/me")
 @jwt_required()
 def me():
-    user_id = get_jwt_identity()
+    user_id: int = get_jwt_identity()
 
-    user_query = User.query.get(user_id)
-    user: List = user_query.format()
+    user_query: Any = User.query.get(user_id)  # type:ignore
+    user = user_query.format()
 
-    if user:
-        return jsonify({
-            "success": True,
-            "user": user
-        }
-        ), 200
-    else:
+    if not user:
         abort(400)
+
+    return jsonify({"success": True, "user": user}), 200
 
 
 @auth.get("/refresh")
 @jwt_required(refresh=True)
 def refresh_user_token():
-    # get user_id
     user_id: int = get_jwt_identity()
+    access_token: str = create_access_token(identity=user_id)
+    return jsonify({"success": True, "access_token": access_token, "code": 200})
 
-    # create access token
-    access_token = create_access_token(identity=user_id)
 
-    return jsonify({
-        "success": True,
-        "code": 200,
-        "access_token": access_token
-    })
+@auth.get("/logout")
+@jwt_required()
+def logout():
+    try:
+        # user_id:int = get_jwt_identity()
+        response = jsonify({"success": True, "message": "Logout successful"}, 200)
+        unset_jwt_cookies(response, "logout")
+        return response
+    except Exception:
+        abort(500)
