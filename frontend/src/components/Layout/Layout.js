@@ -1,12 +1,13 @@
-import React from "react";
-import useWallpaper from "../../hooks/useWallpaper";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
+import fetchWallpaper from "../../utils/fetchWallpaper";
 
-const apiKey = "ssxRTObTWUTsTNRA4FCR6sUIeznLzrtbwT6JkUzWZLA";
+const DEFAULT_WALLPAPER = "https://images.unsplash.com/photo-1476610182048-b716b8518aae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTQ2Nzd8MHwxfHNlYXJjaHwxNnx8d2FsbHBhcGVyJTIwbmF0dXJlfGVufDB8fHx8MTY3NzQ5MzExOA&ixlib=rb-4.0.3&q=80&w=1080"
+
 const Layout = (props) => {
-  const [wallpaper] = useWallpaper(apiKey);
-  const BoldWithImageBefore = styled.div`
+  const [wallpaper,setWallpaper] = useState("")
+  const BoldWithImageBefore = styled.main`
     position: relative;
     &::before {
       content: "";
@@ -18,23 +19,32 @@ const Layout = (props) => {
       background-image: url(${wallpaper});
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
       z-index: -10;
     }
-  `;
-  if (wallpaper) {
-    // const image = wallpaper.toString();
-    // alert(image);
-    console.log(wallpaper);
-    return <BoldWithImageBefore>{props.children}</BoldWithImageBefore>;
-  }
 
-  return (
-    <div
-      className={`before:absolute before:top-0 before:right-0 before:left-0 before:bottom-0 relative before:bg-[url(https://images.unsplash.com/photo-1476610182048-b716b8518aae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTQ2Nzd8MHwxfHNlYXJjaHwxNnx8d2FsbHBhcGVyJTIwbmF0dXJlfGVufDB8fHx8MTY3NzQ5MzExOA&ixlib=rb-4.0.3&q=80&w=1080)] before:-z-10`}
-    >
-      {props.children}
-    </div>
-  );
+  `;
+
+  useEffect(() => {
+  const getWallpaper = async ()=>{
+    const {errorMessage, wallpaperLink} = await fetchWallpaper()
+    if(errorMessage){
+      setWallpaper(DEFAULT_WALLPAPER)
+    }else{
+      setWallpaper(wallpaperLink)
+    }
+  }
+  getWallpaper()
+
+  }, [])
+  
+
+ 
+  
+    return <BoldWithImageBefore>{props.children}</BoldWithImageBefore>;
+  
+
+
 };
 
 export default Layout;

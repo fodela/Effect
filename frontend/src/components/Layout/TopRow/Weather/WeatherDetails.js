@@ -7,7 +7,7 @@ import Modal from "../../../Modal";
 import EditLocation from "./EditLocation";
 
 const WeatherDetails = ({ open }) => {
-  // console.log(useContext(WeatherContext));
+
   const [isOpen, setIsOpen] = useState(false);
   const [editLocation, setEditLocation] = useState(false);
   const { weather } = useContext(WeatherContext);

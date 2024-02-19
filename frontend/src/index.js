@@ -4,27 +4,25 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import { AuthProvider } from "./context/AuthProvider";
 import { WeatherProvider } from "./context/weatherContext";
-import UserProvider from "./context/UserProvider";
 import { TasksProvider } from "./context/TasksProvider";
-import { WallpaperProvider } from "./context/WallpaperProvider";
+import {Provider} from "react-redux"
+import { store } from "./app/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <WallpaperProvider>
-      <AuthProvider>
-        <UserProvider>
+       
           <WeatherProvider>
             <TasksProvider>
+              <Provider store={store}>
+
               <div id="root-modal" />
               <App />
+              </Provider>
             </TasksProvider>
           </WeatherProvider>
-        </UserProvider>
-      </AuthProvider>
-    </WallpaperProvider>
+        
   </React.StrictMode>
 );
 

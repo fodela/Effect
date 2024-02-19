@@ -14,17 +14,6 @@ body {
   @apply absolute -inset-4 -z-10 bg-gradient-to-br from-gray-600 rounded-full blur opacity-50;
 }
 
-@keyframes loading-spinner {
-  0% {
-    transform: scale(0);
-  }
-  20% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
 
 .loading {
   @apply w-6 h-6 rounded-full bg-gray-300 m-2;
@@ -40,6 +29,12 @@ body {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
+.animation-reveal-up {
+  animation: reveal_up 1s ease-in-out ;
+}
+.animation-hide-down {
+  animation: reveal_up 1s ease-in-out ;
+}
 
 .delay-1s {
   animation-delay: 0.2s;
@@ -51,4 +46,47 @@ body {
 
 .delay-3s {
   animation-delay: 0.4s;
+}
+
+.bg-bw{
+  @apply bg-gradient-to-br from-black/60 via-black/40 to-white/10;
+}
+
+
+
+
+.signup_form label{
+  @apply text-stone-300;
+}
+
+
+
+@keyframes loading-spinner {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes reveal_up {
+  0% {
+    transform: translateY(100vh);
+  }
+  
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes reveal_down {
+  0% {
+    transform: translateY(0);
+  }
+  
+  100% {
+    transform: translateY(100vh);
+  }
 }

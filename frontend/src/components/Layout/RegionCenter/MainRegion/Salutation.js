@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import useUser from "../../../../hooks/useUser";
+import { selectCurrentUser } from "../../../../features/auth/authSlice";
+import { useSelector } from "react-redux";
 
 const Salutation = () => {
   const [greetings, setGreetings] = useState("");
@@ -16,12 +17,12 @@ const Salutation = () => {
     }
   });
 
-  const { user } = useUser();
+  const  user  = useSelector(selectCurrentUser);
 
   return (
     <div className="self-center text-3xl relative">
       <div className="bgShadow" />
-      {greetings} <span className="capitalize">{user.username}</span>.
+      {greetings} <span className="capitalize">{user}</span>.
     </div>
   );
 };

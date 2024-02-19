@@ -1,8 +1,10 @@
 import React from "react";
-import useUser from "../../../../hooks/useUser";
+import { logOut, selectCurrentUser } from "../../../../features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Settings = () => {
-  const { user } = useUser();
+  const  user  = useSelector(selectCurrentUser);
+  const dispatch = useDispatch()
   return (
     <div className="bg-black opacity-75 fixed bottom-12 left-4 z-50 w-64 h-80 flex flex-col justify-between p-4 rounded-md text-lg">
       <ol className="flex flex-col gap-2">
@@ -22,11 +24,12 @@ const Settings = () => {
               src="beautiful_sky.jpg"
               className="h-10 w-10 rounded-full"
             ></img>
-            <span>{user.username}</span>
+            <span>{user}</span>
           </summary>
           <ol>
             <li>Profile</li>
-            <li>Logout</li>
+            <li><button onClick={()=>{console.log("hi")
+            dispatch(logOut())}}>Logout</button></li>
           </ol>
         </details>
       </div>
